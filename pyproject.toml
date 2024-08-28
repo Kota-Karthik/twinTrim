@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "twinTrim"
+version = "0.1.0"
+description = "A CLI tool to find and delete duplicate files in a directory."
+authors = ["Your Name <you@example.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+click = "^8.0"  # For creating CLI commands
+tqdm = "^4.66.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+twinTrim = "twinTrim.main:cli"
