@@ -1,7 +1,6 @@
 import os
 import click
 import time
-import sqlite3
 from collections import defaultdict
 from twinTrim.utils import find_duplicates
 from twinTrim.db import drop_all_tables,recreate_database
