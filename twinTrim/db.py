@@ -2,6 +2,7 @@
 
 import sqlite3
 import click
+import os
 
 DATABASE = 'files.db'  
 
@@ -98,3 +99,22 @@ def drop_all_tables():
         click.echo(click.style("All tables dropped from the database.", fg='green'))
     except Exception as e:
         click.echo(click.style(f"Error dropping tables from database: {e}", fg='red'))
+
+
+def recreate_database():
+    """Delete and recreate the database."""
+    try:
+        if os.path.exists(DATABASE):
+            os.remove(DATABASE)
+            click.echo(click.style("Old database removed.", fg='green'))
+
+        # Create a new database and initialize schema
+        conn = sqlite3.connect(DATABASE)
+        cursor = conn.cursor()
+        # Initialize schema (create tables, etc.)
+        # Example: cursor.execute("CREATE TABLE files (path TEXT PRIMARY KEY)")
+        conn.commit()
+        conn.close()
+        click.echo(click.style("New database created.", fg='green'))
+    except Exception as e:
+        click.echo(click.style(f"Error recreating the database: {e}", fg='red'))

@@ -4,7 +4,7 @@ import time
 import sqlite3
 from collections import defaultdict
 from twinTrim.utils import find_duplicates
-from twinTrim.db import drop_all_tables
+from twinTrim.db import drop_all_tables,recreate_database
 
 
 @click.command()
@@ -53,8 +53,9 @@ def cli(directory):
                 except Exception as e:
                     click.echo(click.style(f"Error deleting {duplicate}: {e}", fg='red'))
 
-        # Drop all tables from the databasey
+        # Drop all tables from the database
         drop_all_tables()
+        recreate_database()
 
     click.echo(click.style("Duplicate files removed, keeping the original intact.", fg='green'))
     click.echo(click.style(f"Time taken: {time_taken:.2f} seconds.", fg='green'))
