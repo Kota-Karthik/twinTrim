@@ -2,7 +2,9 @@
 import os
 import click
 import time
+from collections import defaultdict
 from twinTrim.utils import find_duplicates
+
 
 @click.command()
 @click.argument("directory", type=click.Path(exists=True))
@@ -23,17 +25,33 @@ def cli(directory):
 
     click.echo(f"Found {len(duplicates)} sets of duplicate files:")
 
-    for i, (original, duplicate) in enumerate(duplicates, 1):
-        click.echo(f"{i}.")
-        click.echo(f"Original: {original}")
-        click.echo(f"Duplicate: {duplicate}")
+    duplicates_dict = defaultdict(list)
+    for original, duplicate in duplicates:
+        duplicates_dict[original].append(duplicate)
+
+    # Print results
+    for original, duplicates_list in duplicates_dict.items():
+        click.echo(f"Original file: \"{original}\"")
+        click.echo(f"Number of duplicate files found: {len(duplicates_list)}")
+        click.echo("They are:")
+        for idx, duplicate in enumerate(duplicates_list, 1):
+            click.echo(f"{idx}) {duplicate}")
+        click.echo()
 
     # Ask user for deletion choice
     click.confirm("Do you want to delete all duplicates permanently? (keeping the original)", abort=True)
 
-    for _, duplicate in duplicates:
-        os.remove(duplicate)
-        click.echo(f"Deleted: {duplicate}")
+    for original, duplicates_list in duplicates_dict.items():
+        for duplicate in duplicates_list:
+            try:
+                os.remove(duplicate)
+                click.echo(f"Deleted: {duplicate}")
+            except FileNotFoundError:
+                click.echo(f"File not found (skipped): {duplicate}")
+            except PermissionError:
+                click.echo(f"Permission denied (skipped): {duplicate}")
+            except Exception as e:
+                click.echo(f"Error deleting {duplicate}: {e}")
 
     click.echo("Duplicate files removed, keeping the original intact.")
     click.echo(f"Time taken: {time_taken:.2f} seconds.")
