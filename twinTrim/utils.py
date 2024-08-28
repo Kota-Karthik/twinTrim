@@ -1,6 +1,7 @@
 import hashlib
 import os
-from tqdm import tqdm
+# from tqdm import tqdm
+from twinTrim.db import create_tables, insert_file, insert_duplicate, query_duplicates
 
 def get_file_hash(file_path):
     """Generate a hash for a given file."""
@@ -12,25 +13,23 @@ def get_file_hash(file_path):
 
 
 def find_duplicates(directory):
-    """Find duplicate files in the given directory."""
+    """Find duplicate files in the given directory and store them in the database."""
     files_seen = {}
-    duplicates = []
 
-    # Count the total number of files for the progress bar
-    total_files = sum(len(files) for _, _, files in os.walk(directory))
+    # Create tables if they do not exist
+    create_tables()
 
-    # Using tqdm for the progress bar
-    with tqdm(total=total_files, desc="Scanning Files", unit="file") as pbar:
-        for root, _, files in os.walk(directory):
-            for file_name in files:
-                file_path = os.path.join(root, file_name)
-                file_hash = get_file_hash(file_path)
+    for root, _, files in os.walk(directory):
+        for file_name in files:
+            file_path = os.path.join(root, file_name)
+            file_hash = get_file_hash(file_path)
 
-                if file_hash in files_seen:
-                    duplicates.append((files_seen[file_hash], file_path))
-                else:
-                    files_seen[file_hash] = file_path
+            if file_hash in files_seen:
+                original_path = files_seen[file_hash]
+                insert_file(file_path, file_hash)
+                insert_duplicate(original_path, file_path)
+            else:
+                files_seen[file_hash] = file_path
+                insert_file(file_path, file_hash)
 
-                pbar.update(1)  # Update the progress bar for each file processed
-
-    return duplicates
+    return query_duplicates()

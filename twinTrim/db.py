@@ -1,7 +1,6 @@
 # twinTrim/db.py
 
 import sqlite3
-from tkinter import messagebox
 
 def create_tables():
     """Create necessary tables in the SQLite database."""
@@ -26,7 +25,7 @@ def create_tables():
             """)
             conn.commit()
     except sqlite3.Error as error:
-        messagebox.showwarning("Database Error", str(error))
+        print(f"Database Error: {error}")
 
 def insert_file(file_path, file_hash):
     """Insert a file record into the database."""
@@ -36,7 +35,7 @@ def insert_file(file_path, file_hash):
             cursor.execute("INSERT OR IGNORE INTO files (file_path, file_hash) VALUES (?, ?)", (file_path, file_hash))
             conn.commit()
     except sqlite3.Error as error:
-        messagebox.showwarning("Database Error", str(error))
+        print(f"Database Error: {error}")
 
 def insert_duplicate(original_path, duplicate_path):
     """Insert a duplicate record into the database."""
@@ -50,7 +49,7 @@ def insert_duplicate(original_path, duplicate_path):
             cursor.execute("INSERT INTO duplicates (original_id, duplicate_id) VALUES (?, ?)", (original_id, duplicate_id))
             conn.commit()
     except sqlite3.Error as error:
-        messagebox.showwarning("Database Error", str(error))
+        print(f"Database Error: {error}")
 
 def query_duplicates():
     """Query and return all duplicates from the database."""
@@ -65,5 +64,5 @@ def query_duplicates():
             """)
             return cursor.fetchall()
     except sqlite3.Error as error:
-        messagebox.showwarning("Database Error", str(error))
+        print(f"Database Error: {error}")
         return []
