@@ -12,7 +12,7 @@ BATCH_SIZE = 100  # Define batch size for bulk insertion
 
 def get_file_hash(file_path):
     """Generate a hash for a given file."""
-    hash_algo = hashlib.sha256()
+    hash_algo = hashlib.md5()
     with open(file_path, "rb") as file:
         for chunk in iter(lambda: file.read(BUF_SIZE), b""):
             hash_algo.update(chunk)
