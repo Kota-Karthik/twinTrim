@@ -110,14 +110,6 @@ def drop_all_tables():
         conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
 
-        # Enable writable schema to allow dropping tables
-        # cursor.execute("PRAGMA writable_schema = 1")
-        # cursor.execute("PRAGMA foreign_keys = OFF")
-
-        # # Get the list of tables
-        # cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
-        # tables = cursor.fetchall()
-
         tables = ["duplicates", "files"] # remove duplicates first as it has some foreign key dependency on files
 
         # Drop each table
@@ -125,9 +117,6 @@ def drop_all_tables():
             table_name = table[0]
             cursor.execute(f"TRUNCATE TABLE IF EXISTS {table_name}")
             click.echo(click.style(f"Truncate table: {table_name}", fg='green'))
-
-        # Re-enable foreign key checks
-        # cursor.execute("PRAGMA foreign_keys = ON")
 
         conn.commit()
         conn.close()

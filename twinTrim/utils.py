@@ -5,10 +5,21 @@ from twinTrim.db import create_tables, insert_files, insert_duplicates, query_du
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from queue import Queue
 from threading import Thread
+import click
 
 BUF_SIZE = 65536
 BATCH_SIZE = 100  # Define batch size for bulk insertion
 
+def handle_and_remove(filepath):
+    try:
+        os.remove(filepath)
+        click.echo(click.style(f"Deleted: {filepath}", fg='green'))
+    except FileNotFoundError:
+        click.echo(click.style(f"File not found (skipped): {filepath}", fg='red'))
+    except PermissionError:
+        click.echo(click.style(f"Permission denied (skipped): {filepath}", fg='red'))
+    except Exception as e:
+        click.echo(click.style(f"Error deleting {filepath}: {e}", fg='red'))                    
 
 def get_file_hash(file_path):
     """Generate a hash for a given file."""
