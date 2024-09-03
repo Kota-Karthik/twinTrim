@@ -1,7 +1,7 @@
 import threading
 import os
 from typing import Dict
-from .utils import get_file_hash, handle_and_remove
+from twinTrim.utils import get_file_hash, handle_and_remove
 
 class AllFileMetadata:
     def __init__(self, filepath: str):

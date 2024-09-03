@@ -3,7 +3,7 @@ import time
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import click
-from twinTrim.dataStructures import AllFileMetadata, store, add_or_update_file, store_lock
+from twinTrim.dataStructures.allFileMetadata import add_or_update_file
 
 def handleAllFlag(directory):
     """Handle all duplicates automatically without asking if --all flag is set."""
