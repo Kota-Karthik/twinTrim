@@ -76,12 +76,10 @@ def find_duplicates(directory):
                 _, file_path, file_hash = item
                 file_batch.append((file_path, file_hash))
             
-            # Insert file batch if it reaches the BATCH_SIZE
             if len(file_batch) >= BATCH_SIZE:
                 insert_files(file_batch)
                 file_batch.clear()
             
-            # Insert duplicate batch if it reaches the BATCH_SIZE
             if len(duplicate_batch) >= BATCH_SIZE:
                 insert_duplicates(duplicate_batch)
                 duplicate_batch.clear()
@@ -116,4 +114,7 @@ def find_duplicates(directory):
     db_thread.join()
 
     return query_duplicates()
+
+
+
 

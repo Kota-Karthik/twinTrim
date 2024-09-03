@@ -3,17 +3,19 @@ import click
 import time
 from collections import defaultdict
 from twinTrim.utils import find_duplicates,handle_and_remove
+from twinTrim.flagController import handleAllFlag
 from twinTrim.db import drop_all_tables, recreate_database
 
 @click.command()
 @click.argument("directory", type=click.Path(exists=True))
-@click.option("--verbose", is_flag=True, help="Enable verbose output.")
 @click.option("--all", is_flag=True, help="Delete duplicates automatically without asking.")
-def cli(directory,delete):
+def cli(directory,all):
     """Find and manage duplicate files in the specified DIRECTORY."""
+    if all:
+        handleAllFlag(directory)
+        return
 
     start_time = time.time() 
-
     duplicates = find_duplicates(directory)
 
     end_time = time.time()  
