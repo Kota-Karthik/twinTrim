@@ -33,14 +33,16 @@ class AllFileMetadata:
 
 
 store: Dict[str, AllFileMetadata] = {}
-
+store_lock=threading.Lock()
 def add_or_update_file(file_path: str):
-
     file_hash = get_file_hash(file_path)
     new_file_metadata = AllFileMetadata(file_path)
+    with store_lock:
+        existing_file_metadata = store.get(file_hash)
+
+        if existing_file_metadata is None:
+            store[file_hash] = new_file_metadata
+        else:
+            existing_file_metadata.compare_and_replace(new_file_metadata)
+
     
-    if file_hash in store:
-        existing_file_metadata = store[file_hash]
-        existing_file_metadata.compare_and_replace(new_file_metadata)
-    else:
-        store[file_hash] = new_file_metadata
