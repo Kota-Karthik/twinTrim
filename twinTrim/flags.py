@@ -4,7 +4,6 @@ import time
 from collections import defaultdict
 from twinTrim.utils import handle_and_remove
 from twinTrim.flagController import handleAllFlag, find_duplicates
-from twinTrim.db import drop_all_tables, recreate_database
 from beaupy import select_multiple
 
 @click.command()
