@@ -30,6 +30,7 @@ class AllFileMetadata:
                 self.file_modified_time = new_mod_time  # Update the modification time
             else:
                 handle_and_remove(new_metadata.filepath)  # Remove the new file
+
 # Store for file metadata, keyed by file hash
 store: Dict[str, AllFileMetadata] = {}
 store_lock = threading.Lock()
