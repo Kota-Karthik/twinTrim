@@ -5,20 +5,21 @@ from collections import defaultdict
 from twinTrim.utils import handle_and_remove
 from twinTrim.flagController import handleAllFlag, find_duplicates
 from twinTrim.db import drop_all_tables, recreate_database
+from beaupy import select_multiple
 
 @click.command()
 @click.argument("directory", type=click.Path(exists=True))
 @click.option("--all", is_flag=True, help="Delete duplicates automatically without asking.")
-def cli(directory,all):
+def cli(directory, all):
     """Find and manage duplicate files in the specified DIRECTORY."""
     if all:
         handleAllFlag(directory)
         return
 
-    start_time = time.time() 
+    start_time = time.time()
     duplicates = find_duplicates(directory)
 
-    end_time = time.time()  
+    end_time = time.time()
     time_taken = end_time - start_time
 
     if not duplicates:
@@ -32,23 +33,26 @@ def cli(directory,all):
     for original, duplicate in duplicates:
         duplicates_dict[original].append(duplicate)
 
-    # Print results
+    # Process each set of duplicates
     for original, duplicates_list in duplicates_dict.items():
         click.echo(click.style(f"Original file: \"{original}\"", fg='cyan'))
         click.echo(click.style(f"Number of duplicate files found: {len(duplicates_list)}", fg='cyan'))
         click.echo(click.style("They are:", fg='cyan'))
-        for idx, duplicate in enumerate(duplicates_list, 1):
-            click.echo(f"{click.style(f'{idx})', fg='magenta')} {duplicate}")
-        click.echo()
+        file_options = [f"{idx + 1}) {duplicate}" for idx, duplicate in enumerate(duplicates_list)]
+        
+        # Prompt user to select which files to delete
+        selected_indices = select_multiple(
+            file_options,  # List of files to choose from
+            ticked_indices=[],         # Default indices that are selected
+            maximal_count=len(file_options)  # Maximum number of selections allowed
+        )
 
-    # Handle deletion based on flags
-    if click.confirm(click.style("Do you want to delete all duplicates permanently? (keeping the original)", fg='red'), abort=True):
-        for original, duplicates_list in duplicates_dict.items():
-            for duplicate in duplicates_list:
-                handle_and_remove(duplicate)
-        drop_all_tables()
-        recreate_database()
-        click.echo(click.style("Database dropped and recreated.", fg='green'))
+        # Convert the indices back to the original file paths
+        files_to_delete = [duplicates_list[int(option.split(")")[0]) - 1] for option in selected_indices]
 
-    click.echo(click.style("Duplicate files removed, keeping the original intact.", fg='green'))
+        for file_path in files_to_delete:
+            handle_and_remove(file_path)
+
+    click.echo(click.style("Selected duplicate files removed!", fg='green'))
     click.echo(click.style(f"Time taken: {time_taken:.2f} seconds.", fg='green'))
+
