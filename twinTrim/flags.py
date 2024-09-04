@@ -2,21 +2,35 @@ import os
 import click
 import time
 from collections import defaultdict
-from twinTrim.utils import handle_and_remove
+from twinTrim.utils import handle_and_remove,parse_size
 from twinTrim.flagController import handleAllFlag, find_duplicates
 from beaupy import select_multiple
+from twinTrim.dataStructures.fileFilter import FileFilter
 
 @click.command()
 @click.argument("directory", type=click.Path(exists=True))
 @click.option("--all", is_flag=True, help="Delete duplicates automatically without asking.")
-def cli(directory, all):
+@click.option("--min-size", default=0, type=str, help="Minimum file size in bytes.")
+@click.option("--max-size", default=10485760, type=str, help="Maximum file size in bytes.")
+@click.option("--file-type", default="*", help="File type to include (e.g., .txt, .jpg).")
+@click.option("--exclude", multiple=True, help="Files to exclude by name.")
+def cli(directory, all, min_size, max_size, file_type, exclude):
     """Find and manage duplicate files in the specified DIRECTORY."""
+
+    # Initialize the FileFilter object
+    file_filter = FileFilter()
+    file_filter.setMinFileSize(parse_size(min_size))
+    file_filter.setMaxFileSize(parse_size(max_size))
+    file_filter.setFileType(file_type)
+    for file_name in exclude:
+        file_filter.addFileExclude(file_name)
+
     if all:
-        handleAllFlag(directory)
+        handleAllFlag(directory, file_filter)
         return
 
     start_time = time.time()
-    duplicates = find_duplicates(directory)
+    duplicates = find_duplicates(directory, file_filter)
 
     end_time = time.time()
     time_taken = end_time - start_time
@@ -54,4 +68,3 @@ def cli(directory, all):
 
     click.echo(click.style("Selected duplicate files removed!", fg='green'))
     click.echo(click.style(f"Time taken: {time_taken:.2f} seconds.", fg='green'))
-

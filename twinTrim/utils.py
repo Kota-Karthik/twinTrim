@@ -24,3 +24,13 @@ def get_file_hash(file_path):
             hash_algo.update(chunk)
     return hash_algo.hexdigest()
 
+def parse_size(size_str):
+    size_str = size_str.lower()
+    if size_str.endswith('kb'):
+        return int(float(size_str[:-2]) * 1024)
+    elif size_str.endswith('mb'):
+        return int(float(size_str[:-2]) * 1024 * 1024)
+    elif size_str.endswith('gb'):
+        return int(float(size_str[:-2]) * 1024 * 1024 * 1024)
+    else:
+        return int(size_str)

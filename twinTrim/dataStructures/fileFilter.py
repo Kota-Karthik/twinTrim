@@ -3,7 +3,7 @@ import os
 class FileFilter:
     def __init__(self):
         self.minFileSize = 0
-        self.maxFileSize = float('inf')
+        self.maxFileSize = 10485760
         self.fileType = "*"
         self.fileExclude = []
 
@@ -21,10 +21,12 @@ class FileFilter:
 
     def filter_files(self, file_path):
         """Check if a file meets the filter criteria."""
+        # print(os.path.getsize(file_path))
         if os.path.getsize(file_path) < self.minFileSize or os.path.getsize(file_path) > self.maxFileSize:
             return False
         # if self.fileType != "*" and not file_path.endswith(self.fileType):
         #     return False
-        if os.path.basename(file_path) in self.fileExclude:
+        # print(os.path.basename(file_path).strip())
+        if os.path.basename(file_path.strip()) in self.fileExclude:
             return False
         return True
