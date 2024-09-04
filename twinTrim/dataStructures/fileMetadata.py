@@ -16,7 +16,7 @@ class FileMetadata:
 
 normalStore: Dict[str, 'FileMetadata'] = {}
 normalStore_lock = threading.Lock()
-def add_or_update_file(file_path: str):
+def add_or_update_normal_file(file_path: str):
     """Adds a new file's metadata to the normalStore or updates it if a duplicate is found."""
     file_hash = get_file_hash(file_path)
     new_file_metadata = FileMetadata([file_path])
