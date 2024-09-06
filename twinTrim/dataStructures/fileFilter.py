@@ -3,9 +3,9 @@ import re
 
 class FileFilter:
     def __init__(self):
-        self.minFileSize = "0kb"
+        self.minFileSize = "10kb"
         self.maxFileSize = "1gb"
-        self.fileType = r"^.+\..*$" 
+        self.fileType = r"^.+\.*$" 
         self.fileExclude = []
 
     def setMinFileSize(self, size):
