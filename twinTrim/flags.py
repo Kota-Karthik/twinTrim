@@ -2,7 +2,7 @@ import os
 import click
 import time
 from collections import defaultdict
-from twinTrim.utils import handle_and_remove,parse_size
+from twinTrim.utils import handle_and_remove, parse_size
 from twinTrim.flagController import handleAllFlag, find_duplicates
 from beaupy import select_multiple
 from twinTrim.dataStructures.fileFilter import FileFilter
@@ -10,9 +10,9 @@ from twinTrim.dataStructures.fileFilter import FileFilter
 @click.command()
 @click.argument("directory", type=click.Path(exists=True))
 @click.option("--all", is_flag=True, help="Delete duplicates automatically without asking.")
-@click.option("--min-size", default=0, type=str, help="Minimum file size in bytes.")
-@click.option("--max-size", default=10485760, type=str, help="Maximum file size in bytes.")
-@click.option("--file-type", default="*", help="File type to include (e.g., .txt, .jpg).")
+@click.option("--min-size", default="10kb", type=str, help="Minimum file size in bytes.")
+@click.option("--max-size", default="1gb", type=str, help="Maximum file size in bytes.")
+@click.option("--file-type", default=".*", help="File type to include (e.g., .txt, .jpg).")
 @click.option("--exclude", multiple=True, help="Files to exclude by name.")
 def cli(directory, all, min_size, max_size, file_type, exclude):
     """Find and manage duplicate files in the specified DIRECTORY."""
@@ -57,7 +57,7 @@ def cli(directory, all, min_size, max_size, file_type, exclude):
         selected_indices = select_multiple(
             file_options,  # List of files to choose from
             ticked_indices=[],         # Default indices that are selected
-            maximal_count=len(file_options)  # Maximum number of selections allowed
+            maximal_count=len(file_options)  
         )
 
         # Convert the indices back to the original file paths
