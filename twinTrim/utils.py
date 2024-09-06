@@ -3,7 +3,7 @@ import hashlib
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import click
 
-BUF_SIZE = 65536
+BUF_SIZE = 131072
 
 def handle_and_remove(filepath):
     try:
@@ -18,7 +18,7 @@ def handle_and_remove(filepath):
 
 def get_file_hash(file_path):
     """Generate a hash for a given file."""
-    hash_algo = hashlib.md5()
+    hash_algo = hashlib.blake2b()
     with open(file_path, "rb") as file:
         for chunk in iter(lambda: file.read(BUF_SIZE), b""):
             hash_algo.update(chunk)
