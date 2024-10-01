@@ -51,7 +51,7 @@ def find_duplicates(directory, file_filter):
     def process_file(file_path):
         add_or_update_normal_file(file_path)
 
-    with ThreadPoolExecutor() as executor, progress_bar_func("Scanning", total_files, color="green") as progress_bar:
+    with ThreadPoolExecutor() as executor, progress_bar_func("Hashing", total_files, color="green") as progress_bar:
         # Submit tasks to the executor
         futures = {executor.submit(process_file, file_path): file_path for file_path in all_files}
         
