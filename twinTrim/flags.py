@@ -10,11 +10,13 @@ from twinTrim.dataStructures.fileFilter import FileFilter
 @click.command()
 @click.argument("directory", type=click.Path(exists=True))
 @click.option("--all", is_flag=True, help="Delete duplicates automatically without asking.")
-@click.option("--min-size", default="10kb", type=str, help="Minimum file size in bytes.")
+@click.option("--min-size", default="0kb", type=str, help="Minimum file size in bytes.")
 @click.option("--max-size", default="1gb", type=str, help="Maximum file size in bytes.")
 @click.option("--file-type", default=".*", help="File type to include (e.g., .txt, .jpg).")
 @click.option("--exclude", multiple=True, help="Files to exclude by name.")
-def cli(directory, all, min_size, max_size, file_type, exclude):
+@click.option("--label-color", default="yellow", type=str, help="Color of the label of progress bar.")
+@click.option("--bar-color", default='#aaaaaa', type=str, help="Color of the progress bar.")
+def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar_color):
     """Find and manage duplicate files in the specified DIRECTORY."""
 
     # Initialize the FileFilter object
@@ -26,11 +28,11 @@ def cli(directory, all, min_size, max_size, file_type, exclude):
         file_filter.addFileExclude(file_name)
 
     if all:
-        handleAllFlag(directory, file_filter)
+        handleAllFlag(directory, file_filter, label_color, bar_color)
         return
 
     start_time = time.time()
-    duplicates = find_duplicates(directory, file_filter)
+    duplicates = find_duplicates(directory, file_filter, label_color, bar_color)
 
     end_time = time.time()
     time_taken = end_time - start_time

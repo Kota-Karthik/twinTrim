@@ -57,6 +57,8 @@ python twinTrim.py <directory> [OPTIONS]
 - `--max-size`: Specify the maximum file size to include in the scan (e.g., `1gb`).
 - `--file-type`: Specify the file type to include (e.g., `.txt`, `.jpg`).
 - `--exclude`: Exclude specific files by name.
+- `--label-color`: Set the font color of the output label of the progress bar.
+- `--bar-color`: Set the color of the progress bar.
 
 ### Examples
 

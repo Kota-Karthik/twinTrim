@@ -28,4 +28,3 @@ def add_or_update_normal_file(file_path: str):
             normalStore[file_hash] = new_file_metadata
         else:
             existing_file_metadata.insert_file(file_path)
-
