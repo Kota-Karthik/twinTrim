@@ -7,12 +7,16 @@ from twinTrim.dataStructures.allFileMetadata import add_or_update_file
 from twinTrim.dataStructures.fileMetadata import FileMetadata, normalStore , add_or_update_normal_file
 from tqdm import tqdm
 
+#bar function to be used by scanner thread pools
+progress_bar_format = "{desc}: {n_fmt}/{total_fmt} | ETA={remaining} | {rate_fmt} {bar} {percentage:.3f}%"
+"""adaptive progress bar, returns tqdm object"""
+def progress_bar_func(bar_desc, total, unit='file',color="yellow"): #default to yellow
+    bar_desc_obj = click.style(bar_desc, fg=color, bold=True) # set to bold by default
+    return tqdm(total=total, desc=bar_desc_obj, unit=unit, bar_format= progress_bar_format)
+
 def handleAllFlag(directory,file_filter):
     """Handle all duplicates automatically without asking if --all flag is set."""
     all_start_time = time.time()
-    yellow = '\033[93m'
-    reset = '\033[0m'
-    progress_bar_format = f"{yellow}{{l_bar}}{{bar}}{{r_bar}}{{bar}}{reset}"
 
     # Collect all file paths to process
     all_files = [os.path.join(root, file_name) for root, _, files in os.walk(directory) for file_name in files]
@@ -20,7 +24,7 @@ def handleAllFlag(directory,file_filter):
     total_files = len(all_files)
 
     # Use ThreadPoolExecutor to handle files concurrently
-    with ThreadPoolExecutor() as executor, tqdm(total=total_files, desc="Scanning files", unit="file", bar_format=progress_bar_format) as progress_bar:
+    with ThreadPoolExecutor() as executor, progress_bar_func("Scanning", total_files) as progress_bar:
         futures = {executor.submit(add_or_update_file, file_path): file_path for file_path in all_files}
 
         # Update progress bar as files are processed
@@ -43,16 +47,11 @@ def find_duplicates(directory, file_filter):
 
     # Calculate the total number of files and ensure it is finite
     total_files = len(all_files)
-    
-    # Define yellow color ANSI escape code
-    yellow = '\033[93m'
-    reset = '\033[0m'
-    progress_bar_format = f"{yellow}{{l_bar}}{{bar}}{{r_bar}}{{bar}}{reset}"
 
     def process_file(file_path):
         add_or_update_normal_file(file_path)
 
-    with ThreadPoolExecutor() as executor, tqdm(total=total_files, desc="Scanning files", unit="file", bar_format=progress_bar_format) as progress_bar:
+    with ThreadPoolExecutor() as executor, progress_bar_func("Scanning", total_files, color="green") as progress_bar:
         # Submit tasks to the executor
         futures = {executor.submit(process_file, file_path): file_path for file_path in all_files}
         
