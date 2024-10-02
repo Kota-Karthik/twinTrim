@@ -23,6 +23,7 @@ class AllFileMetadata:
             # Ignore if the new file is missing
             if new_mod_time == -1:
                 return
+            print("file2:", new_mod_time,"file1", self.file_modified_time)
             # Keep the most recently modified file and delete the other
             if new_mod_time > self.file_modified_time:
                 handle_and_remove(self.filepath)  # Remove current file
