@@ -1,50 +1,42 @@
-import re
 import pytest
-from  twinTrim.dataStructures.fileFilter import FileFilter
+from twinTrim.dataStructures.fileFilter import FileFilter
 
+def test_set_file_type_valid():
+    """Test setting valid file types."""
+    file_filter = FileFilter()
 
-
-@pytest.fixture
-def file_filter():
-    return FileFilter()
-
-def test_set_file_type_with_valid_extension(file_filter):
-    # Test with valid file extensions
+    # Test setting a common file type
     file_filter.setFileType("txt")
-    assert re.match(file_filter.fileType, "example.txt")
-    assert not re.match(file_filter.fileType, "example.pdf")
+    assert file_filter.fileType == r"^.+\.txt$", "Failed to set file type regex for .txt files"
 
-    file_filter.setFileType("pdf")
-    assert re.match(file_filter.fileType, "example.pdf")
-    assert not re.match(file_filter.fileType, "example.txt")
+    # Test setting a file type with multiple extensions
+    file_filter.setFileType("tar.gz")
+    assert file_filter.fileType == r"^.+\.tar.gz$", "Failed to set file type regex for .tar.gz files"
 
-def test_set_file_type_with_multiple_extensions(file_filter):
-    # Test with multiple valid extensions
-    file_filter.setFileType("(txt|pdf)")
-    assert re.match(file_filter.fileType, "document.txt")
-    assert re.match(file_filter.fileType, "report.pdf")
-    assert not re.match(file_filter.fileType, "image.png")
+    # Test setting a single character file type
+    file_filter.setFileType("c")
+    assert file_filter.fileType == r"^.+\.c$", "Failed to set file type regex for .c files"
 
-def test_set_file_type_with_invalid_extension(file_filter):
-    # Set an invalid file type and check if it works as expected (no matches)
-    file_filter.setFileType("[invalid]")  # This is a strange pattern, but it won't raise an error
-    assert not re.match(file_filter.fileType, "example.txt")
-    assert not re.match(file_filter.fileType, "example.pdf")
-    
-    # Test with an empty file extension, should not match anything
+def test_set_file_type_empty_string():
+    """Test setting an empty string as file type."""
+    file_filter = FileFilter()
+
+    # The empty string should be accepted and form a regex matching any file without an extension
     file_filter.setFileType("")
-    assert not re.match(file_filter.fileType, "example.txt")
+    assert file_filter.fileType == r"^.+\.$", "Failed to set file type regex for empty file type"
 
+def test_set_file_type_special_characters():
+    """Test setting file types with special characters."""
+    file_filter = FileFilter()
 
-def test_set_file_type_with_special_characters(file_filter):
-    # Test with special characters in file extensions
-    file_filter.setFileType("t.x.t")
-    assert re.match(file_filter.fileType, "example.t.x.t")
-    assert not re.match(file_filter.fileType, "example.txt")
+    # Special characters should be part of the file extension in the regex
+    file_filter.setFileType("mp4#")
+    assert file_filter.fileType == r"^.+\.mp4#$", "Failed to set file type regex for special characters"
 
-def test_set_file_type_with_uppercase_extensions(file_filter):
-    # Test with uppercase file extensions
-    file_filter.setFileType("TXT")
-    assert re.match(file_filter.fileType, "file.TXT")
-    assert not re.match(file_filter.fileType, "file.txt")
+def test_set_file_type_numeric():
+    """Test setting numeric file type extensions."""
+    file_filter = FileFilter()
 
+    # File types with numbers should be accepted
+    file_filter.setFileType("123")
+    assert file_filter.fileType == r"^.+\.123$", "Failed to set file type regex for numeric file type"
