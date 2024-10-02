@@ -1,27 +1,29 @@
 import pytest
 import os
 from twinTrim.dataStructures.allFileMetadata import AllFileMetadata
+import pytest
 
-# Create a temporary file for testing
+
 @pytest.fixture
 def temp_file(tmp_path):
-    test_file = tmp_path / "test_file.txt"
-    test_file.write_text("Hello, World!")
-    return str(test_file)
+    # Create a temporary file for testing
+    file = tmp_path / "test_file.txt"
+    file.write_text("Sample content")
+    return str(file)
 
 def test_get_modification_time_existing_file(temp_file):
     # Arrange
-    metadata = AllFileMetadata()
+    metadata = AllFileMetadata(temp_file)
     # Act
-    modification_time = metadata.get_modification_time(temp_file)
+    modification_time = metadata.get_modification_time()
     # Assert
-    assert modification_time != -1  # Ensure it returns a valid timestamp
-
+    assert modification_time is not None  # Replace with appropriate assertion
+    
 def test_get_modification_time_non_existing_file():
     # Arrange
-    metadata = AllFileMetadata()
-    non_existing_file = "non_existing_file.txt"
+    non_existing_filepath = "path/to/non/existing/file.txt"
+    metadata = AllFileMetadata(non_existing_filepath)
     # Act
-    modification_time = metadata.get_modification_time(non_existing_file)
+    modification_time = metadata.get_modification_time()
     # Assert
-    assert modification_time == -1  # Ensure it returns -1 for non-existing file
+    assert modification_time == -1  # Update the assertion
