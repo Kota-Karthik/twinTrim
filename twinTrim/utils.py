@@ -26,11 +26,16 @@ def get_file_hash(file_path):
 
 def parse_size(size_str):
     size_str = size_str.lower()
-    if size_str.endswith('kb'):
-        return int(float(size_str[:-2]) * 1024)
-    elif size_str.endswith('mb'):
-        return int(float(size_str[:-2]) * 1024 * 1024)
-    elif size_str.endswith('gb'):
-        return int(float(size_str[:-2]) * 1024 * 1024 * 1024)
-    else:
-        return int(size_str)
+    try:
+        if size_str.endswith('kb'):
+            return int(float(size_str[:-2]) * 1024)
+        elif size_str.endswith('mb'):
+            return int(float(size_str[:-2]) * 1024 * 1024)
+        elif size_str.endswith('gb'):
+            return int(float(size_str[:-2]) * 1024 * 1024 * 1024)
+        else:
+            # Attempt to convert size_str to an integer
+            return int(size_str)  # This can also be modified to handle sizes without suffix
+    except ValueError:
+        # If conversion fails, return 0 for invalid formats
+        return 0
