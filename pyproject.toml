@@ -10,6 +10,9 @@ python = "^3.8"
 click = "^8.0"  # For creating CLI commands
 tqdm = "^4.66.5"
 
+[tool.poetry.group.dev.dependencies]
+pytest-mock = "^3.14.0"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
