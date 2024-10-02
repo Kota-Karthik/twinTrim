@@ -10,7 +10,7 @@ from twinTrim.dataStructures.fileFilter import FileFilter
 @click.command()
 @click.argument("directory", type=click.Path(exists=True))
 @click.option("--all", is_flag=True, help="Delete duplicates automatically without asking.")
-@click.option("--min-size", default="10kb", type=str, help="Minimum file size in bytes.")
+@click.option("--min-size", default="0kb", type=str, help="Minimum file size in bytes.")
 @click.option("--max-size", default="1gb", type=str, help="Maximum file size in bytes.")
 @click.option("--file-type", default=".*", help="File type to include (e.g., .txt, .jpg).")
 @click.option("--exclude", multiple=True, help="Files to exclude by name.")
