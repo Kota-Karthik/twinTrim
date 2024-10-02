@@ -100,3 +100,11 @@ def test_add_or_update_file_mixed_concurrently():
   assert store["hash_file_1"].filepath == "file_1"
   assert store["hash_file_2"].filepath == "file_2"
   assert store["hash_file_3"].filepath == "file_3"
+
+def test_add_or_update_file_when_file_doesnt_exist(mocker):
+    mockfile = "mockfile.txt"
+    mocker.patch("twinTrim.dataStructures.allFileMetadata.os.path.exists", return_value=False)
+    mocker.patch("twinTrim.dataStructures.allFileMetadata.get_file_hash", side_effect=FileNotFoundError)
+    
+    with pytest.raises(FileNotFoundError):
+        add_or_update_file(mockfile)

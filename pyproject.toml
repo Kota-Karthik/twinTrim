@@ -11,6 +11,7 @@ click = "^8.0"  # For creating CLI commands
 tqdm = "^4.66.5"
 
 [tool.poetry.group.dev.dependencies]
+pytest-mock = "^3.14.0"
 pytest = "^8.3.3"
 
 [build-system]
