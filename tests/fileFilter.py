@@ -1,8 +1,6 @@
 import re
 import pytest
 from  twinTrim.dataStructures.fileFilter import FileFilter
-import sys
-import os
 
 
 
