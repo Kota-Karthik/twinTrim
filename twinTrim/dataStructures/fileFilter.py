@@ -8,7 +8,14 @@ class FileFilter:
         self.fileType = r"^.+\.*$" 
         self.fileExclude = []
 
+    def setMinFileSize(self, size):
+        self.minFileSize = size
 
+    def setMaxFileSize(self, size):
+        self.maxFileSize = size
+
+    def setFileType(self, file_type):
+        self.fileType = rf"^.+\.{file_type}$"  
 
     def addFileExclude(self, file_name):
         self.fileExclude.append(file_name)
