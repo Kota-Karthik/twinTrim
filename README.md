@@ -101,6 +101,10 @@ If you haven't installed Poetry yet, you can do so by following the instructions
 
 Contributions are welcome! Whether you have ideas for improving the internal workings of TwinTrim, such as optimizing performance or refining algorithms, or you want to enhance the user interface of the CLI tool for a better user experience, your input is valuable. Please fork the repository and submit a pull request with your improvements or new features.
 
+## Code of Conduct
+
+We have adopted a [Code of Conduct](./CODE_OF_CONDUCT.md) to foster an inclusive and welcoming environment. Please read and follow it.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
