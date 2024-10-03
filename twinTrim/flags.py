@@ -7,6 +7,20 @@ from twinTrim.flagController import handleAllFlag, find_duplicates
 from beaupy import select_multiple
 from twinTrim.dataStructures.fileFilter import FileFilter
 
+# Define colorized output functions
+def print_info(message):
+    click.echo(click.style(message, fg='cyan'))
+
+def print_success(message):
+    click.echo(click.style(message, fg='green'))
+
+def print_warning(message):
+    click.echo(click.style(message, fg='yellow'))
+
+def print_error(message):
+    click.echo(click.style(message, fg='red'))
+
+
 @click.command()
 @click.argument("directory", type=click.Path(exists=True))
 @click.option("--all", is_flag=True, help="Delete duplicates automatically without asking.")
@@ -38,11 +52,11 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
     time_taken = end_time - start_time
 
     if not duplicates:
-        click.echo(click.style("No duplicate files found.", fg='green'))
-        click.echo(click.style(f"Time taken: {time_taken:.2f} seconds.", fg='green'))
+        print_success("No duplicate files found.")
+        print_success(f"Time taken: {time_taken:.2f} seconds.")
         return
 
-    click.echo(click.style(f"Found {len(duplicates)} sets of duplicate files:", fg='yellow'))
+    print_warning(f"Found {len(duplicates)} sets of duplicate files:")
 
     duplicates_dict = defaultdict(list)
     for original, duplicate in duplicates:
@@ -50,9 +64,9 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
 
     # Process each set of duplicates
     for original, duplicates_list in duplicates_dict.items():
-        click.echo(click.style(f"Original file: \"{original}\"", fg='cyan'))
-        click.echo(click.style(f"Number of duplicate files found: {len(duplicates_list)}", fg='cyan'))
-        click.echo(click.style("They are:", fg='cyan'))
+        print_info(f"Original file: \"{original}\"")
+        print_info(f"Number of duplicate files found: {len(duplicates_list)}")
+        print_info("They are:")
         file_options = [f"{idx + 1}) {duplicate}" for idx, duplicate in enumerate(duplicates_list)]
         
         # Prompt user to select which files to delete
@@ -68,5 +82,5 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
         for file_path in files_to_delete:
             handle_and_remove(file_path)
 
-    click.echo(click.style("Selected duplicate files removed!", fg='green'))
-    click.echo(click.style(f"Time taken: {time_taken:.2f} seconds.", fg='green'))
+    print_success("Selected duplicate files removed!")
+    print_success(f"Time taken: {time_taken:.2f} seconds.")
