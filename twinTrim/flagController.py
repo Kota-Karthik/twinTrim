@@ -33,6 +33,10 @@ def handleAllFlag(directory,file_filter,pb_color,bar_color):
 
         # Update progress bar as files are processed
         for future in as_completed(futures):
+            try:
+                future.result()  # Ensures exception handling for each future
+            except Exception as e:
+                click.echo(click.style(f"Error processing file {futures[future]}: {str(e)}", fg='red'))
             progress_bar.update(1)
 
     click.echo(click.style("All files scanned and duplicates handled.", fg='green'))
@@ -60,7 +64,11 @@ def find_duplicates(directory, file_filter, pb_color, bar_color):
         futures = {executor.submit(process_file, file_path): file_path for file_path in all_files}
         
         for future in as_completed(futures):
-            progress_bar.update(1) 
+            try:
+                future.result()  # Ensures exception handling for each future
+            except Exception as e:
+                click.echo(click.style(f"Error processing file {futures[future]}: {str(e)}", fg='red'))
+            progress_bar.update(1)
 
     duplicates = []
     for _, metadata in normalStore.items():
@@ -70,5 +78,3 @@ def find_duplicates(directory, file_filter, pb_color, bar_color):
                 duplicates.append((original_path, duplicate_path))
 
     return duplicates
-
-
