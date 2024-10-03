@@ -1,9 +1,54 @@
 import os
 import pytest
-import tempfile
-from twinTrim.utils import parse_size, get_file_hash  # Adjust based on actual import path
-
+import tempfile 
+import unittest
+from unittest import mock
+from twinTrim.utils import parse_size, get_file_hash,handle_and_remove  # Adjust based on actual import path
+import click
+import io
+import sys
 # Tests for parse_size function
+class TestHandleAndRemove(unittest.TestCase):
+    
+    def setUp(self):
+        # Create a temporary file to test deletion
+        self.temp_file = tempfile.NamedTemporaryFile(delete=True)
+        self.temp_file_path = self.temp_file.name  # Get the file path
+
+    def tearDown(self):
+        # Cleanup: Make sure the temp file is removed
+        try:
+            os.remove(self.temp_file_path)
+        except Exception:
+            pass  # If it doesn't exist, ignore the error
+
+    def test_handle_and_remove_success(self):
+        # Test successful file deletion
+        result = handle_and_remove(self.temp_file_path)
+        self.assertFalse(os.path.exists(self.temp_file_path))  # File should not exist anymore
+
+    @mock.patch("os.remove")
+    
+    def test_handle_and_remove_file_not_found(self, mock_remove):
+    # Simulate FileNotFoundError
+        mock_remove.side_effect = FileNotFoundError
+        with mock.patch('sys.stdout', new=io.StringIO()) as fake_out:
+            handle_and_remove("non_existent_file.txt")
+            output = fake_out.getvalue()  # Capture the printed output
+            self.assertIn("File not found (skipped): non_existent_file.txt", output)
+
+    @mock.patch("os.remove")
+    def test_handle_and_remove_permission_error(self, mock_remove):
+    # Simulate PermissionError
+        mock_remove.side_effect = PermissionError
+        with mock.patch('sys.stdout', new=io.StringIO()) as fake_out:
+            handle_and_remove(self.temp_file_path)  # Using temp file to ensure we have a real file
+            output = fake_out.getvalue()  # Capture the printed output
+            self.assertIn("Permission denied (skipped): {}".format(self.temp_file_path), output)
+
+if __name__ == "__main__":
+    unittest.main()
+
 def test_parse_size_valid():
     # Test valid size strings
     assert parse_size("10kb") == 10 * 1024  # 10 * 1024 bytes = 10240
