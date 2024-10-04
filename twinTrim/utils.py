@@ -3,7 +3,7 @@ import hashlib
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import click
 
-BUF_SIZE = 65536
+BUF_SIZE = 131072
 
 def handle_and_remove(filepath):
     try:
