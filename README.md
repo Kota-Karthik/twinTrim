@@ -3,6 +3,21 @@
 
 TwinTrim is a powerful and efficient tool designed to find and manage duplicate files across directories. It provides a streamlined way to scan files, identify duplicates based on their content, and remove them automatically or with user guidance, helping you save storage space and keep your file system organized.
 
+## Table of Contents
+
+1. [Features](#features)
+2. [How It Works](#how-it-works)
+   - [Core Components](#core-components)
+   - [Key Functions](#key-functions)
+3. [Usage](#usage)
+   - [Command Line Interface](#command-line-interface)
+   - [Options](#options)
+   - [Examples](#examples)
+4. [Dependencies](#dependencies)
+5. [Installation](#installation)
+6. [Contributing](#contributing)
+7. [License](#license)
+
 ## Features
 
 - **Duplicate Detection**: Scans directories to detect duplicate files based on file content rather than just filenames.
