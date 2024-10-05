@@ -1,59 +1,57 @@
-# 🔄 TwinTrim
+# TwinTrim
 
-TwinTrim is a powerful tool designed to efficiently scan and manage duplicate files across directories. It helps you keep your file system organized and save storage space by removing duplicates based on file content. 🎯
+TwinTrim is a powerful and efficient tool designed to find and manage duplicate files across directories. It provides a streamlined way to scan files, identify duplicates based on their content, and remove them automatically or with user guidance, helping you save storage space and keep your file system organized.
 
-## ✨ Key Features
+## Features
 
-- 🔍 **Duplicate Detection**: Scans directories and identifies duplicate files based on their content (using MD5 hashing).
-- 🤖 **Automatic or Manual Removal**: Remove duplicates automatically using the `--all` flag or manually select which files to delete.
-- 🎛️ **Customizable Filters**: Control scan precision with filters for file size, type, or name exclusions.
-- 🚀 **Multi-Threaded Processing**: Efficiently scans large directories by utilizing concurrent multi-threading.
-- 🛡️ **Deadlock Prevention**: Ensures smooth execution by preventing deadlocks during concurrent operations.
-- 💻 **User-Friendly CLI**: Offers intuitive feedback through progress bars, prompts, and clear instructions.
+- **Duplicate Detection**: Scans directories to detect duplicate files based on file content rather than just filenames.
+- **Automatic or Manual Removal**: Choose to handle duplicates automatically using the `--all` flag or manually select which files to delete.
+- **Customizable Filters**: Set filters for minimum and maximum file sizes, file types, and specific filenames to exclude from the scan.
+- **Multi-Threaded Processing**: Utilizes multi-threading to quickly scan and process large numbers of files concurrently.
+- **Deadlock Prevention**: Implements locks to prevent deadlocks during multi-threaded operations, ensuring
+- **Dry Run**: Use the --dry-run option to simulate the process without making any changes, allowing you to review what will happen before executing.
+  smooth and safe execution.
+- **User-Friendly Interface**: Offers clear prompts and feedback via the command line, making the process straightforward and interactive.
 
----
-
-## ⚙️ How It Works
+## How It Works
 
 ### Core Components
 
-#### 🗂️ File Metadata Management
+1. **File Metadata Management**:
 
-TwinTrim uses `AllFileMetadata` and `FileMetadata` classes to manage details like file modification time and paths. It maintains two separate dictionaries:
+   - Uses `AllFileMetadata` and `FileMetadata` classes to manage file information, such as modification time and file paths.
+   - Maintains metadata in two dictionaries (`store` and `normalStore`) for handling different levels of duplicate management.
 
-- **Store**: For handling duplicates.
-- **NormalStore**: For managing files that aren't immediately considered duplicates.
+2. **File Hashing**:
 
-#### 🔑 File Hashing
+   - Generates a unique hash for each file using MD5 to identify duplicates by content.
 
-Each file is hashed using **MD5** to generate a unique identifier. Files with identical hashes are flagged as duplicates.
+3. **File Filtering**:
 
-#### 🎚️ File Filtering
+   - The `FileFilter` class provides functionality to filter files based on size, type, and exclusions.
 
-Through the `FileFilter` class, you can specify custom filters to refine your scan:
+4. **Duplicate Handling**:
 
-- **Size**: Include files within a specific range.
-- **Type**: Scan only files with certain extensions (e.g., `.jpg`, `.txt`).
-- **Exclusions**: Exclude files by name or pattern.
+   - Duplicate files are identified by comparing their hashes.
+   - Based on file modification time, the latest file is retained, and older duplicates are removed.
 
-#### 🗑️ Duplicate Handling
+5. **Dry Run Mode**:
 
-Duplicates are identified based on file hashes. The latest version of each file (based on modification time) is kept, while older duplicates are removed.
+The --dry-run flag allows you to simulate the duplicate removal process without making any actual changes, giving you an opportunity to review potential actions before committing to them.
 
-#### 🧵 Deadlock Prevention
+5. **Deadlock Prevention**:
+   - Uses locks within multi-threaded processes to ensure that resources are accessed safely, preventing deadlocks that could otherwise halt execution.
 
-TwinTrim uses locking mechanisms to safely manage multi-threaded operations and avoid deadlocks.
+### Key Functions
 
-### 🔄 Detailed Workflow
+- **add_or_update_file**: Adds new files to the metadata store or updates existing entries if a duplicate is detected.
+- **add_or_update_normal_file**: Similar to `add_or_update_file` but manages duplicates in a separate store.
+- **handleAllFlag**: Handles duplicate removal automatically without user intervention.
+- **find_duplicates**: Finds duplicate files in the specified directory and prepares them for user review or automatic handling.
 
-1. **Add or Update Files**: TwinTrim scans directories and either adds new files to the metadata store or updates entries when duplicates are found.
-2. **Hashing and Comparison**: A unique MD5 hash is generated for each file, which is compared with existing hashes.
-3. **Handling Duplicates**: Duplicate files are flagged for removal, and users can choose whether to review and confirm or allow automatic deletion.
-4. **Thread-Safe Processing**: With multi-threading, TwinTrim processes multiple files concurrently, while locks ensure the system runs smoothly without resource contention.
+## Usage
 
----
-
-## 🛠️ Usage
+### Command Line Interface
 
 Run the script using the following command:
 
@@ -61,132 +59,67 @@ Run the script using the following command:
 python twinTrim.py <directory> [OPTIONS]
 ```
 
-### Common Options
+### Options
 
-- `--all`: Automatically delete duplicates without confirmation. 🤖
-- `--min-size`: Set the minimum file size (e.g., `10kb`). 📏
-- `--max-size`: Set the maximum file size (e.g., `1gb`). 📏
-- `--file-type`: Filter files by type (e.g., `.jpg`, `.txt`). 🗃️
-- `--exclude`: Exclude specific filenames or patterns. 🚫
-- `--label-color`: Set the progress bar label color. 🎨
-- `--bar-color`: Customize the progress bar color. 🌈
+- `--all`: Automatically delete duplicates without asking for confirmation.
+- `--min-size`: Specify the minimum file size to include in the scan (e.g., `10kb`).
+- `--max-size`: Specify the maximum file size to include in the scan (e.g., `1gb`).
+- `--file-type`: Specify the file type to include (e.g., `.txt`, `.jpg`).
+- `--exclude`: Exclude specific files by name.
+- `--label-color`: Set the font color of the output label of the progress bar.
+- `--bar-color`: Set the color of the progress bar.
+- `--dry-run`: Simulate the duplicate removal process without making any changes.
 
-### 📝 Examples
+### Examples
 
-**Automatic Duplicate Removal**
+1. **Automatic Duplicate Removal**:
 
-```bash
-python twinTrim.py /path/to/directory --all
-```
-
-**Manual Review and Removal**
-
-```bash
-python twinTrim.py /path/to/directory
-```
-
-**Filtered Scan**
-
-```bash
-python twinTrim.py /path/to/directory --min-size "50kb" --max-size "500mb" --file-type "txt"
-```
-
----
-
-## 📥 Installation
-
-### 🐍 Python Installation Guide
-
-To use TwinTrim, you need Python 3.6 or later installed on your system. Follow the steps below to install Python on your machine:
-
-#### For Windows
-
-Download Python:
-Go to the official Python website [PYTHON](https://www.python.org/downloads/) and download the latest version of Python.
-
-Run the Installer:
-Once the download is complete, open the installer. Make sure to check the box that says:
-
-Add Python 3 to PATH before clicking the "Install Now" button.
-This will ensure Python is added to your system environment variables, so you can use it from the command line.
-
-Verify Installation: Open Command Prompt (cmd) and run the following command to verify the installation:
-
-```bash
-python --version
-```
-
-You should see the version of Python you just installed (e.g., Python 3.10.x).
-
-#### For macOS
-
-Download Python:
-Visit the official Python website [PYTHON](https://www.python.org/downloads/) and download the latest version for macOS.
-
-Install Python:
-Open the downloaded .pkg file and follow the installation instructions.
-
-Verify Installation:
-Open the Terminal and run:
-
-```bash
-python3 --version
-```
-
-macOS comes with Python 2.x pre-installed, so you’ll need to use python3 to access the latest version.
-
-#### For Linux
-
-Most Linux distributions come with Python pre-installed. To install or update Python, follow these steps:
-
-Update System Packages: Open the terminal and run:
-
-```bash
-sudo apt update
-sudo apt upgrade
-```
-
-Install Python: Install Python 3.x by running:
-
-```bash
-sudo apt install python3
-```
-
-Verify Installation: Run the following command to verify:
-
-```bash
-python3 --version
-```
-
-### ⬇️ Twin Trim Installation Guide
-
-1. Clone the repository:
    ```bash
-   git clone https://github.com/Kota-Karthik/twinTrim.git
-   cd twinTrim
+   python twinTrim.py /path/to/directory --all
    ```
-2. Install dependencies with Poetry:
+
+2. **Manual Review and Removal**:
+
    ```bash
-   poetry install
+   python twinTrim.py /path/to/directory
    ```
-   _If you haven't installed Poetry yet click [here](https://python-poetry.org/docs/#installing-with-pipx)._
 
-## 📦 Dependencies
+3. **Filtered Scan by File Size and Type**:
 
-- **Python 3.6+** 🐍
-- `click`: For command-line interaction. 💬
-- `tqdm`: For progress bars. 📊
-- `concurrent.futures`: For multi-threading. 🧵
-- `beaupy`: For interactive selection. ✅
+   ```bash
+   python twinTrim.py /path/to/directory --min-size "50kb" --max-size "500mb" --file-type "txt"
+   ```
 
-## 👨‍💻 Contribution
+4. **Dry Run Simulation**:
 
-Contributions are welcome! 🤝 Whether you have ideas for optimizing performance, refining algorithms, or improving the user interface, your input is valuable. To contribute:
+   ```bash
+   python twinTrim.py /path/to/directory --dry-run
+   ```
 
-1. Fork the repository.
-2. Make your improvements or add new features.
-3. Submit a pull request! 🚀
+## Dependencies
 
-## 📜 License
+- Python 3.6+
+- `click` for command-line interaction
+- `tqdm` for progress bars
+- `concurrent.futures` for multi-threaded processing
+- `beaupy` for interactive selection
 
-This project is licensed under the MIT License. See the [LICENSE](https://github.com/Kota-Karthik/twinTrim/blob/main/LICENSE) file for details.
+## Installation
+
+Clone the repository and install the required dependencies using Poetry:
+
+```bash
+git clone https://github.com/Kota-Karthik/twinTrim.git
+cd twinTrim
+poetry install
+```
+
+If you haven't installed Poetry yet, you can do so by following the instructions on the [Poetry website](https://python-poetry.org/docs/#installation).
+
+## Contributing
+
+Contributions are welcome! Whether you have ideas for improving the internal workings of TwinTrim, such as optimizing performance or refining algorithms, or you want to enhance the user interface of the CLI tool for a better user experience, your input is valuable. Please fork the repository and submit a pull request with your improvements or new features.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

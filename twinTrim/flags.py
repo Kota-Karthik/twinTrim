@@ -10,15 +10,16 @@ from twinTrim.dataStructures.fileFilter import FileFilter
 @click.command()
 @click.argument("directory", type=click.Path(exists=True))
 @click.option("--all", is_flag=True, help="Delete duplicates automatically without asking.")
-@click.option("--min-size", default="10kb", type=str, help="Minimum file size in bytes.")
+@click.option("--min-size", default="0kb", type=str, help="Minimum file size in bytes.")
 @click.option("--max-size", default="1gb", type=str, help="Maximum file size in bytes.")
 @click.option("--file-type", default=".*", help="File type to include (e.g., .txt, .jpg).")
 @click.option("--exclude", multiple=True, help="Files to exclude by name.")
 @click.option("--label-color", default="yellow", type=str, help="Color of the label of progress bar.")
 @click.option("--bar-color", default='#aaaaaa', type=str, help="Color of the progress bar.")
-def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar_color):
+@click.option("--dry-run", is_flag=True, help="Simulate the process without deleting files.")
+def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar_color, dry_run):
     """Find and manage duplicate files in the specified DIRECTORY."""
-
+    
     # Initialize the FileFilter object
     file_filter = FileFilter()
     file_filter.setMinFileSize(parse_size(min_size))
@@ -28,7 +29,9 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
         file_filter.addFileExclude(file_name)
 
     if all:
-        handleAllFlag(directory, file_filter, label_color, bar_color)
+        if dry_run:
+            click.echo(click.style("Dry run mode enabled: Skipping actual deletion.", fg='yellow'))
+        handleAllFlag(directory, file_filter, label_color, bar_color, dry_run=dry_run)  # Modify handleAllFlag to support dry_run
         return
 
     start_time = time.time()
@@ -66,7 +69,15 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
         files_to_delete = [duplicates_list[int(option.split(")")[0]) - 1] for option in selected_indices]
 
         for file_path in files_to_delete:
-            handle_and_remove(file_path)
+            if dry_run:
+                click.echo(click.style(f"[Dry Run] Would delete: {file_path}", fg='yellow'))
+            else:
+                handle_and_remove(file_path)
 
-    click.echo(click.style("Selected duplicate files removed!", fg='green'))
+    if not dry_run:
+        click.echo(click.style("Selected duplicate files removed!", fg='green'))
+    else:
+        click.echo(click.style("Dry run completed. No files were actually deleted.", fg='yellow'))
+
     click.echo(click.style(f"Time taken: {time_taken:.2f} seconds.", fg='green'))
+
