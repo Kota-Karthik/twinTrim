@@ -1,0 +1,58 @@
+name: Auto Assign and Unassign Issues
+
+on:
+  issues:
+    types: [opened, labeled]
+  schedule:
+    - cron: '0 0 * * 0' # Unassignment workflow runs once a week
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Check if the issue body contains specific templates
+      - name: Check if issue uses specific templates
+        id: template-check
+        run: |
+          if [[ "${{ github.event.issue.body }}" == *"bug_report"* || "${{ github.event.issue.body }}" == *"test_request"* || "${{ github.event.issue.body }}" == *"enhancement_request"* ]]; then
+            echo "true" > template_match.txt
+          else
+            echo "false" > template_match.txt
+        shell: bash
+
+      - name: Read template match result
+        id: template-result
+        run: echo "template_matched=$(cat template_match.txt)" >> $GITHUB_ENV
+
+      # Step 2: Check if issue creator is a collaborator
+      - name: Check if issue creator is a collaborator
+        id: collaborator-check
+        uses: actions/github-script@v6
+        if: env.template_matched == 'true'  # Only proceed if issue used the correct template
+        with:
+          script: |
+            const { data: collaborators } = await github.repos.listCollaborators({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            const creator = context.payload.issue.user.login;
+            const isCollaborator = collaborators.some(collaborator => collaborator.login === creator);
+            return isCollaborator;
+
+      # Step 3: Assign the issue to the creator if not a collaborator
+      - name: Assign issue to creator if not a collaborator
+        if: steps.collaborator-check.outputs.result == 'false' && env.template_matched == 'true'
+        uses: actions-ecosystem/action-add-issue-assigner@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          assignees: ${{ github.event.issue.user.login }}
+
+  auto-unassign:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 4: Unassign issues with no activity for a week
+      - name: Unassign issues with no activity for a week
+        uses: ahmadnassri/action-unassign-issues@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          inactivity_days: 7  # Number of days without activity before unassigning
