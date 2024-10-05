@@ -17,11 +17,10 @@ jobs:
       - name: Check if issue uses specific labels
         id: label-check
         run: |
-          # Convert JSON array to bash array
-          labels=(${{ toJson(github.event.issue.labels) }})
+          # Check if the issue labels contain 'bug', 'test', or 'enhancement'
           label_matches=false
-          for label in "${labels[@]}"; do
-            if [[ "$label" == "\"bug\"" || "$label" == "\"test\"" || "$label" == "\"enhancement\"" ]]; then
+          for label in "${{ github.event.issue.labels }}"; do
+            if [[ "$label" == "bug" || "$label" == "test" || "$label" == "enhancement" ]]; then
               label_matches=true
               break
             fi
