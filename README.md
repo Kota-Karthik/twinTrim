@@ -103,6 +103,14 @@ Contributions are welcome! Whether you have ideas for improving the internal wor
 
 Please refer to the [CONTRIBUTION.md](./CONTRIBUTION.md) for guidelines on how to contribute.
 
+## Code of Conduct
+
+We value and prioritize creating a positive, welcoming, and inclusive environment for everyone involved in the **TwinTrim** project. We encourage all participants to be respectful, collaborative, and supportive of each other.
+
+Please take a moment to review our [Code of Conduct](./CODE_OF_CONDUCT.md) to understand the expected behavior when contributing to the project.
+
+By participating in **TwinTrim**, you agree to abide by these guidelines and help us maintain a healthy, harassment-free community.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
