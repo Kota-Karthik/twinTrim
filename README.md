@@ -1,3 +1,4 @@
+
 # TwinTrim
 
 TwinTrim is a powerful and efficient tool designed to find and manage duplicate files across directories. It provides a streamlined way to scan files, identify duplicates based on their content, and remove them automatically or with user guidance, helping you save storage space and keep your file system organized.
@@ -8,39 +9,33 @@ TwinTrim is a powerful and efficient tool designed to find and manage duplicate 
 - **Automatic or Manual Removal**: Choose to handle duplicates automatically using the `--all` flag or manually select which files to delete.
 - **Customizable Filters**: Set filters for minimum and maximum file sizes, file types, and specific filenames to exclude from the scan.
 - **Multi-Threaded Processing**: Utilizes multi-threading to quickly scan and process large numbers of files concurrently.
-- **Deadlock Prevention**: Implements locks to prevent deadlocks during multi-threaded operations, ensuring
-- **Dry Run**: Use the --dry-run option to simulate the process without making any changes, allowing you to review what will happen before executing.
-  smooth and safe execution.
+- **Deadlock Prevention**: Implements locks to prevent deadlocks during multi-threaded operations, ensuring smooth and safe execution.
 - **User-Friendly Interface**: Offers clear prompts and feedback via the command line, making the process straightforward and interactive.
+- **Dry Run**: Use the --dry-run option to simulate the process without making any changes, allowing you to review what will happen before executing.
 
 ## How It Works
 
 ### Core Components
 
-1. **File Metadata Management**:
-
-   - Uses `AllFileMetadata` and `FileMetadata` classes to manage file information, such as modification time and file paths.
-   - Maintains metadata in two dictionaries (`store` and `normalStore`) for handling different levels of duplicate management.
-
-2. **File Hashing**:
-
-   - Generates a unique hash for each file using MD5 to identify duplicates by content.
-
+1. **File Metadata Management**: 
+    - Uses `AllFileMetadata` and `FileMetadata` classes to manage file information, such as modification time and file paths.
+    - Maintains metadata in two dictionaries (`store` and `normalStore`) for handling different levels of duplicate management.
+  
+2. **File Hashing**: 
+    - Generates a unique hash for each file using MD5 to identify duplicates by content.
+  
 3. **File Filtering**:
-
-   - The `FileFilter` class provides functionality to filter files based on size, type, and exclusions.
-
+    - The `FileFilter` class provides functionality to filter files based on size, type, and exclusions.
+  
 4. **Duplicate Handling**:
-
-   - Duplicate files are identified by comparing their hashes.
-   - Based on file modification time, the latest file is retained, and older duplicates are removed.
-
-5. **Dry Run Mode**:
-
-The --dry-run flag allows you to simulate the duplicate removal process without making any actual changes, giving you an opportunity to review potential actions before committing to them.
-
+    - Duplicate files are identified by comparing their hashes.
+    - Based on file modification time, the latest file is retained, and older duplicates are removed.
+  
 5. **Deadlock Prevention**:
-   - Uses locks within multi-threaded processes to ensure that resources are accessed safely, preventing deadlocks that could otherwise halt execution.
+    - Uses locks within multi-threaded processes to ensure that resources are accessed safely, preventing deadlocks that could otherwise halt execution.
+  
+6. **Dry Run Mode**:
+    - The --dry-run flag allows you to simulate the duplicate removal process without making any actual changes, giving you an opportunity to review potential actions before committing to them.
 
 ### Key Functions
 
@@ -73,23 +68,19 @@ python twinTrim.py <directory> [OPTIONS]
 ### Examples
 
 1. **Automatic Duplicate Removal**:
-
-   ```bash
-   python twinTrim.py /path/to/directory --all
-   ```
+    ```bash
+    python twinTrim.py /path/to/directory --all
+    ```
 
 2. **Manual Review and Removal**:
-
-   ```bash
-   python twinTrim.py /path/to/directory
-   ```
+    ```bash
+    python twinTrim.py /path/to/directory
+    ```
 
 3. **Filtered Scan by File Size and Type**:
-
-   ```bash
-   python twinTrim.py /path/to/directory --min-size "50kb" --max-size "500mb" --file-type "txt"
-   ```
-
+    ```bash
+    python twinTrim.py /path/to/directory --min-size "50kb" --max-size "500mb" --file-type "txt"
+    ```
 4. **Dry Run Simulation**:
 
    ```bash
@@ -133,3 +124,5 @@ By participating in **TwinTrim**, you agree to abide by these guidelines and hel
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+
