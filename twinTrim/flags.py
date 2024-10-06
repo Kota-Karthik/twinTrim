@@ -6,7 +6,7 @@ from twinTrim.utils import handle_and_remove, parse_size
 from twinTrim.flagController import handleAllFlag, find_duplicates
 from beaupy import select_multiple
 from twinTrim.dataStructures.fileFilter import FileFilter
-
+from fuzzy import find_fuzzy_duplicates
 @click.command()
 @click.argument("directory", type=click.Path(exists=True))
 @click.option("--all", is_flag=True, help="Delete duplicates automatically without asking.")
@@ -14,9 +14,11 @@ from twinTrim.dataStructures.fileFilter import FileFilter
 @click.option("--max-size", default="1gb", type=str, help="Maximum file size in bytes.")
 @click.option("--file-type", default=".*", help="File type to include (e.g., .txt, .jpg).")
 @click.option("--exclude", multiple=True, help="Files to exclude by name.")
-@click.option("--label-color", default="yellow", type=str, help="Color of the label of progress bar.")
+@click.option("--label-color", default="yellow", type=str, help="Color of the label of the progress bar.")
 @click.option("--bar-color", default='#aaaaaa', type=str, help="Color of the progress bar.")
-def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar_color):
+@click.option("--fuzzy", is_flag=True, help="Use fuzzy matching to find duplicates.")
+@click.option("--threshold", default=90, type=int, help="Similarity threshold for fuzzy matching.")
+def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar_color, fuzzy, threshold):
     """Find and manage duplicate files in the specified DIRECTORY."""
 
     # Initialize the FileFilter object
@@ -32,7 +34,12 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
         return
 
     start_time = time.time()
-    duplicates = find_duplicates(directory, file_filter, label_color, bar_color)
+    #checking duplicates using fuzzy matchig technique
+    if fuzzy:
+        files_to_check = file_filter.get_files(directory)  # Ensure this method retrieves filtered files
+        duplicates = find_fuzzy_duplicates(files_to_check, threshold)
+    else:
+        duplicates = find_duplicates(directory, file_filter, label_color, bar_color)
 
     end_time = time.time()
     time_taken = end_time - start_time
