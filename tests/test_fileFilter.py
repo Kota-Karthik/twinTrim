@@ -40,3 +40,5 @@ def test_set_max_file_size_empty_value():
     # Since there is no validation, an empty value would still set it to the empty string
     file_filter.setMaxFileSize("")
     assert file_filter.maxFileSize == "", "Failed to set max file size to empty value"
+
+
