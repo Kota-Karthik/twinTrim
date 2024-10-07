@@ -11,6 +11,7 @@ TwinTrim is a powerful and efficient tool designed to find and manage duplicate 
 - **Multi-Threaded Processing**: Utilizes multi-threading to quickly scan and process large numbers of files concurrently.
 - **Deadlock Prevention**: Implements locks to prevent deadlocks during multi-threaded operations, ensuring smooth and safe execution.
 - **User-Friendly Interface**: Offers clear prompts and feedback via the command line, making the process straightforward and interactive.
+- **Dry Run**: Use the --dry-run option to simulate the process without making any changes, allowing you to review what will happen before executing.
 
 ## How It Works
 
@@ -32,6 +33,9 @@ TwinTrim is a powerful and efficient tool designed to find and manage duplicate 
   
 5. **Deadlock Prevention**:
     - Uses locks within multi-threaded processes to ensure that resources are accessed safely, preventing deadlocks that could otherwise halt execution.
+  
+6. **Dry Run Mode**:
+    - The --dry-run flag allows you to simulate the duplicate removal process without making any actual changes, giving you an opportunity to review potential actions before committing to them.
 
 ### Key Functions
 
@@ -59,6 +63,7 @@ python twinTrim.py <directory> [OPTIONS]
 - `--exclude`: Exclude specific files by name.
 - `--label-color`: Set the font color of the output label of the progress bar.
 - `--bar-color`: Set the color of the progress bar.
+- `--dry-run`: Simulate the duplicate removal process without making any changes.
 
 ### Examples
 
@@ -102,6 +107,14 @@ If you haven't installed Poetry yet, you can do so by following the instructions
 Contributions are welcome! Whether you have ideas for improving the internal workings of TwinTrim, such as optimizing performance or refining algorithms, or you want to enhance the user interface of the CLI tool for a better user experience, your input is valuable. Please fork the repository and submit a pull request with your improvements or new features.
 
 Please refer to the [CONTRIBUTION.md](./CONTRIBUTION.md) for guidelines on how to contribute.
+
+## Code of Conduct
+
+We value and prioritize creating a positive, welcoming, and inclusive environment for everyone involved in the **TwinTrim** project. We encourage all participants to be respectful, collaborative, and supportive of each other.
+
+Please take a moment to review our [Code of Conduct](./CODE_OF_CONDUCT.md) to understand the expected behavior when contributing to the project.
+
+By participating in **TwinTrim**, you agree to abide by these guidelines and help us maintain a healthy, harassment-free community.
 
 ## License
 
