@@ -8,7 +8,7 @@ BUF_SIZE = 131072
 def handle_and_remove(filepath):
     try:
         os.remove(filepath)
-        click.echo(click.style(f"Deleted: {filepath}", fg='green'))
+        click.echo(click.style(f"Deleted: {filepath}"))
     except FileNotFoundError:
         click.echo(click.style(f"File not found (skipped): {filepath}", fg='red'))
     except PermissionError:
