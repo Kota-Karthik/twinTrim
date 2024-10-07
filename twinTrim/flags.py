@@ -22,8 +22,11 @@ from fuzzy import find_fuzzy_duplicates
 @click.option("--fuzzy", is_flag=True, help="Use fuzzy matching to find duplicates.")
 @click.option("--threshold", default=90, type=int, help="Similarity threshold for fuzzy matching.")
 def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar_color, fuzzy, threshold):
-    """Find and manage duplicate files in the specified DIRECTORY."""
+@click.option("--dry-run", is_flag=True, help="Simulate the process without deleting files.")
+def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar_color, dry_run):
 
+    """Find and manage duplicate files in the specified DIRECTORY."""
+    
     # Initialize the FileFilter object
     file_filter = FileFilter()
     file_filter.setMinFileSize(parse_size(min_size))
@@ -33,8 +36,13 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
         file_filter.addFileExclude(file_name)
 
     if all:
+      add-dry-run
+        if dry_run:
+            click.echo(click.style("Dry run mode enabled: Skipping actual deletion.", fg='yellow'))
+        handleAllFlag(directory, file_filter, label_color, bar_color, dry_run=dry_run)  # Modify handleAllFlag to support dry_run
         logging.info("Deleting all duplicate files whithout asking.")
         handleAllFlag(directory, file_filter, label_color, bar_color)
+
         return
 
     start_time = time.time()
@@ -80,6 +88,19 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
         files_to_delete = [duplicates_list[int(option.split(")")[0]) - 1] for option in selected_indices]
 
         for file_path in files_to_delete:
+add-dry-run
+            if dry_run:
+                click.echo(click.style(f"[Dry Run] Would delete: {file_path}", fg='yellow'))
+            else:
+                handle_and_remove(file_path)
+
+    if not dry_run:
+        click.echo(click.style("Selected duplicate files removed!", fg='green'))
+    else:
+        click.echo(click.style("Dry run completed. No files were actually deleted.", fg='yellow'))
+
+    click.echo(click.style(f"Time taken: {time_taken:.2f} seconds.", fg='green'))
+
             try:
                 handle_and_remove(file_path)
                 logging.info(f"Deleted duplicate file: {file_path}")
@@ -95,3 +116,4 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
 
 if __name__ == "__main__":
     cli()
+ main
