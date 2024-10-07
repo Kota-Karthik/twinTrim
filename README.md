@@ -81,11 +81,6 @@ python twinTrim.py <directory> [OPTIONS]
     ```bash
     python twinTrim.py /path/to/directory --min-size "50kb" --max-size "500mb" --file-type "txt"
     ```
-4. **Dry Run Simulation**:
-
-   ```bash
-   python twinTrim.py /path/to/directory --dry-run
-   ```
 
 ## Dependencies
 
