@@ -1,0 +1,95 @@
+
+ 
+
+🌟 TwinTrim Project Documentation 🌟
+🔍 Overview
+TwinTrim is a Python-powered command-line tool designed to help you efficiently identify and eliminate duplicate files cluttering your storage. With advanced file hashing and customizable filters, TwinTrim keeps your system tidy by removing redundant files. It also provides interactive user feedback and detailed logs for transparency.
+
+⚡ Key Features
+🔗 Duplicate File Detection: Uses MD5 hashing to detect duplicate files accurately.
+🗑️ Selective Deletion: Lets users manually select which duplicates to delete and which to keep.
+📝 Comprehensive Logging: Logs every action—file deletions, encountered errors, etc.—for audit trails.
+🎚️ Custom Filters: Filter files by size, type, and other criteria to refine the duplicate search.
+💻 Interactive CLI: Integrates the beaupy library for interactive, user-friendly file selection and deletion.
+🌍 Cross-Platform Support: Works seamlessly on Windows, macOS, and Linux.
+🗂️ File Structure Overview
+
+1. main.py ⚙️
+The main entry point of TwinTrim, responsible for initializing the file scanning and duplicate removal process.
+
+Core Features:
+Runs the cli() function from the flags.py module.
+Handles user input from the terminal to start the file-scanning process.
+
+2. utils.py 🔧
+Contains essential utility functions for file handling and hash generation.
+
+Key Functions:
+handle_and_remove(filepath): Deletes files safely, handling exceptions like FileNotFoundError and PermissionError.
+get_file_hash(file_path): Generates an MD5 hash to detect duplicate files.
+parse_size(size_str): Converts user-friendly size formats (KB, MB, GB) into bytes for accurate filtering.
+
+3. flags.py 🏁
+Manages the command-line flags, file scanning, and interactive user input.
+
+Key Imports:
+handle_and_remove and parse_size from utils.py for seamless file operations.
+Core Features:
+Scans directories to find and group duplicate files.
+Utilizes select_multiple from the beaupy library for interactive deletion choices.
+Provides real-time feedback, showing how many duplicate files are found and logs the process.
+🛠️ Installation Guide
+Prerequisites 📦
+Python 3.6+ must be installed.
+Install Dependencies 🛒
+Run the following command to install necessary dependencies:
+
+bash
+Copy code
+pip install -r requirements.txt
+Clone the Repository 🧑‍💻
+To get started, clone the TwinTrim repository:
+
+bash
+Copy code
+git clone https://github.com/yourusername/twintrim.git
+cd twintrim
+Run the Project 🚀
+Once set up, you can start the application with:
+
+bash
+Copy code
+python main.py
+🎮 Usage Instructions
+TwinTrim offers a simple yet powerful interactive CLI for scanning and managing duplicate files.
+
+How to Use 🗂️
+Automatic Scanning: TwinTrim scans the specified directory for duplicate files.
+Interactive Selection: Choose which duplicate files to delete via an easy-to-use interface.
+Logging: A detailed log is generated after every run, capturing all deletions and errors.
+Example Usage 💡
+To search for duplicate files larger than 10MB in a specific directory:
+
+bash
+Copy code
+python main.py --path "/your/directory/path" --size "10MB"
+🚀 Future Enhancements
+We are continually working to improve TwinTrim! Here are some of the exciting features in the pipeline:
+
+🔒 Support for More Hashing Algorithms: Implementing SHA-256 for more secure file verification.
+🖥️ Graphical User Interface (GUI): Making TwinTrim even more user-friendly with a sleek, intuitive GUI.
+☁️ Cloud Integration: Expand TwinTrim’s reach to cloud platforms like Google Drive and Dropbox.
+⏱️ Scheduled Scanning: Automate regular scans to keep your system clutter-free effortlessly.
+🤝 Contributing to TwinTrim
+We welcome contributions from the community to help TwinTrim grow! Want to pitch in? Follow these steps to contribute:
+
+How to Contribute ✍️
+Fork the repository on GitHub.
+Create a new branch for your feature or fix (git checkout -b feature/YourFeature).
+Commit your changes (git commit -m 'Add some feature').
+Push to your branch (git push origin feature/YourFeature).
+Open a pull request and wait for review!
+👨‍💻 Final Thoughts
+TwinTrim is your go-to tool for managing duplicate files across any platform. Whether you’re cleaning up your personal storage or managing a large-scale system, TwinTrim makes the process straightforward, interactive, and safe.
+
+Start contributing, enjoy seamless duplicate file management, and stay tuned for more exciting features! 🚀✨
