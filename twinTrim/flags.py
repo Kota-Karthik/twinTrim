@@ -37,15 +37,14 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
         file_filter.addFileExclude(file_name)
 
     if all:
-      add-dry-run
-        if dry_run:
-            click.echo(click.style("Dry run mode enabled: Skipping actual deletion.", fg='yellow'))
-        handleAllFlag(directory, file_filter, label_color, bar_color, dry_run=dry_run)  # Modify handleAllFlag to support dry_run
-=======
-        logging.info("Deleting all duplicate files whithout asking.")
-        handleAllFlag(directory, file_filter, label_color, bar_color)
->>>>>   main
-        return
+        add-dry-run
+    if dry_run:
+        click.echo(click.style("Dry run mode enabled: Skipping actual deletion.", fg='yellow'))
+    handleAllFlag(directory, file_filter, label_color, bar_color, dry_run=dry_run)  # Modify handleAllFlag to support dry_run
+    logging.info("Deleting all duplicate files whithout asking.")
+    handleAllFlag(directory, file_filter, label_color, bar_color)
+
+    return
 
     start_time = time.time()
     logging.info(f"Searching for duplicates in directory: {directory}")
@@ -59,11 +58,11 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
 
 
     if not duplicates:
-        click.echo(click.style("No duplicate files found.", fg='green'))
+        click.secho("No duplicate files found.", bold=True, bg='green')
         logging.info("No duplicate files found.")
         return
 
-    click.echo(click.style(f"Found {len(duplicates)} sets of duplicate files:", fg='yellow'))
+    click.echo(click.style(f"Found {len(duplicates)} sets of duplicate files:", bold=True, bg='green'))
     logging.info(f"Found {len(duplicates)} set of duplicate files")
 
     duplicates_dict = defaultdict(list)
@@ -72,25 +71,27 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
 
     # Process each set of duplicates
     for original, duplicates_list in duplicates_dict.items():
-        click.echo(click.style(f"Original file: \"{original}\"", fg='cyan'))
-        click.echo(click.style(f"Number of duplicate files found: {len(duplicates_list)}", fg='cyan'))
+        click.echo(click.style("Original file", fg='cyan', bold=True) + ": " + click.style(f"\"{original}\""))
+        click.echo(click.style("Number of duplicate files found", fg='cyan', bold=True) + ": " + click.style(f"{len(duplicates_list)}"))
         logging.info(f"Original file: \"{original}\" with {len(duplicates_list)} duplicates")
 
-        click.echo(click.style("They are:", fg='cyan'))
+        click.echo(click.style("They are", fg='yellow', bold=True) + ":")
         file_options = [f"{idx + 1}) {duplicate}" for idx, duplicate in enumerate(duplicates_list)]
         
         # Prompt user to select which files to delete
         selected_indices = select_multiple(
             file_options,  # List of files to choose from
             ticked_indices=[],         # Default indices that are selected
-            maximal_count=len(file_options)  
+            maximal_count=len(file_options),
+            tick_style='green',
+            cursor_style='green'
         )
 
         # Convert the indices back to the original file paths
         files_to_delete = [duplicates_list[int(option.split(")")[0]) - 1] for option in selected_indices]
 
         for file_path in files_to_delete:
-add-dry-run
+            add-dry-run
             if dry_run:
                 click.echo(click.style(f"[Dry Run] Would delete: {file_path}", fg='yellow'))
             else:
@@ -103,14 +104,12 @@ add-dry-run
 
     click.echo(click.style(f"Time taken: {time_taken:.2f} seconds.", fg='green'))
 
-=======
-            try:
-                handle_and_remove(file_path)
-                logging.info(f"Deleted duplicate file: {file_path}")
-            except Exception as e:
-                logging.error(f"Error deleting file {file_path}: {str(e)}")
-                click.echo(click.style(f"Error deleting file: {file_path}. Check the log for details.", fg='red'))
-
+    try:
+        handle_and_remove(file_path)
+        logging.info(f"Deleted duplicate file: {file_path}")
+    except Exception as e:
+        logging.error(f"Error deleting file {file_path}: {str(e)}")
+        click.echo(click.style(f"Error deleting file: {file_path}. Check the log for details.", fg='red'))
 
     end_time = time.time()
     time_taken = end_time - start_time
@@ -119,4 +118,3 @@ add-dry-run
 
 if __name__ == "__main__":
     cli()
- main
