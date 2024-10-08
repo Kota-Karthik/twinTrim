@@ -1,123 +1,97 @@
+ ✂️ TwinTrim - Your Smart Duplicate File Manager
+TwinTrim is a powerful and efficient tool designed to find and manage duplicate files across directories. It helps you reclaim storage space and organize your file system effortlessly by scanning, identifying, and removing duplicates, either automatically or with your guidance.
 
-# TwinTrim
+🌟 Key Features
+🕵️ Duplicate Detection: Detects duplicate files based on file content, not just filenames.
+⚙️ Automatic/Manual Removal: You decide! Use the --all flag for automatic deletion or manually select which files to remove.
+🎛️ Customizable Filters: Filter by file size, type, or specific filenames to exclude from the scan.
+🚀 Multi-Threaded: Leverages multi-threading for fast and efficient processing of large directories.
+🔒 Deadlock Prevention: Ensures smooth and safe execution by preventing deadlocks during multi-threaded operations.
+👌 User-Friendly CLI: Intuitive command-line prompts and feedback make it easy to use.
+🔄 Dry Run Mode: Use the --dry-run option to preview actions without making any changes.
+🚧 How TwinTrim Works
+🧰 Core Components
+📂 File Metadata Management:
 
-TwinTrim is a powerful and efficient tool designed to find and manage duplicate files across directories. It provides a streamlined way to scan files, identify duplicates based on their content, and remove them automatically or with user guidance, helping you save storage space and keep your file system organized.
+Manages file metadata (modification times, file paths, etc.) using specialized classes (AllFileMetadata and FileMetadata).
+Stores metadata in store and normalStore dictionaries for precise duplicate management.
+🔑 File Hashing:
 
-## Features
+Identifies duplicates by generating unique hashes (MD5) based on file content.
+🎚️ File Filtering:
 
-- **Duplicate Detection**: Scans directories to detect duplicate files based on file content rather than just filenames.
-- **Automatic or Manual Removal**: Choose to handle duplicates automatically using the `--all` flag or manually select which files to delete.
-- **Customizable Filters**: Set filters for minimum and maximum file sizes, file types, and specific filenames to exclude from the scan.
-- **Multi-Threaded Processing**: Utilizes multi-threading to quickly scan and process large numbers of files concurrently.
-- **Deadlock Prevention**: Implements locks to prevent deadlocks during multi-threaded operations, ensuring smooth and safe execution.
-- **User-Friendly Interface**: Offers clear prompts and feedback via the command line, making the process straightforward and interactive.
-- **Dry Run**: Use the --dry-run option to simulate the process without making any changes, allowing you to review what will happen before executing.
+Filters files by size, type, and exclusions using the FileFilter class.
+♻️ Duplicate Handling:
 
-## How It Works
+Retains the latest file based on modification time and removes older duplicates.
+🔐 Deadlock Prevention:
 
-### Core Components
+Implements locks in multi-threaded processes to prevent deadlocks and ensure smooth execution.
+📝 Dry Run Mode:
 
-1. **File Metadata Management**: 
-    - Uses `AllFileMetadata` and `FileMetadata` classes to manage file information, such as modification time and file paths.
-    - Maintains metadata in two dictionaries (`store` and `normalStore`) for handling different levels of duplicate management.
-  
-2. **File Hashing**: 
-    - Generates a unique hash for each file using MD5 to identify duplicates by content.
-  
-3. **File Filtering**:
-    - The `FileFilter` class provides functionality to filter files based on size, type, and exclusions.
-  
-4. **Duplicate Handling**:
-    - Duplicate files are identified by comparing their hashes.
-    - Based on file modification time, the latest file is retained, and older duplicates are removed.
-  
-5. **Deadlock Prevention**:
-    - Uses locks within multi-threaded processes to ensure that resources are accessed safely, preventing deadlocks that could otherwise halt execution.
-  
-6. **Dry Run Mode**:
-    - The --dry-run flag allows you to simulate the duplicate removal process without making any actual changes, giving you an opportunity to review potential actions before committing to them.
+The --dry-run flag simulates the process without making changes, allowing you to review results beforehand.
+🛠️ Key Functions
+add_or_update_file: Adds new files to the metadata store or updates existing entries if duplicates are found.
+add_or_update_normal_file: Similar to add_or_update_file, but for managing duplicates in a separate store.
+handleAllFlag: Automates duplicate removal without user intervention.
+find_duplicates: Scans directories for duplicates and prepares them for review or automatic handling.
+🖥️ Usage
+Command Line Interface
+To run the script:
 
-### Key Functions
-
-- **add_or_update_file**: Adds new files to the metadata store or updates existing entries if a duplicate is detected.
-- **add_or_update_normal_file**: Similar to `add_or_update_file` but manages duplicates in a separate store.
-- **handleAllFlag**: Handles duplicate removal automatically without user intervention.
-- **find_duplicates**: Finds duplicate files in the specified directory and prepares them for user review or automatic handling.
-
-## Usage
-
-### Command Line Interface
-
-Run the script using the following command:
-
-```bash
+bash
+Copy code
 python twinTrim.py <directory> [OPTIONS]
-```
+Options
+--all: Automatically delete duplicates without confirmation.
+--min-size: Specify the minimum file size to scan (e.g., 10kb).
+--max-size: Specify the maximum file size to scan (e.g., 1gb).
+--file-type: Filter by file type (e.g., .txt, .jpg).
+--exclude: Exclude specific files by name.
+--label-color: Customize the output label color of the progress bar.
+--bar-color: Customize the progress bar color.
+--dry-run: Simulate the removal process before committing changes.
+Examples
+Automatic Removal:
 
-### Options
+bash
+Copy code
+python twinTrim.py /path/to/directory --all
+Manual Review:
 
-- `--all`: Automatically delete duplicates without asking for confirmation.
-- `--min-size`: Specify the minimum file size to include in the scan (e.g., `10kb`).
-- `--max-size`: Specify the maximum file size to include in the scan (e.g., `1gb`).
-- `--file-type`: Specify the file type to include (e.g., `.txt`, `.jpg`).
-- `--exclude`: Exclude specific files by name.
-- `--label-color`: Set the font color of the output label of the progress bar.
-- `--bar-color`: Set the color of the progress bar.
-- `--dry-run`: Simulate the duplicate removal process without making any changes.
+bash
+Copy code
+python twinTrim.py /path/to/directory
+Filtered Scan:
 
-### Examples
+bash
+Copy code
+python twinTrim.py /path/to/directory --min-size "50kb" --max-size "500mb" --file-type "txt"
+🛠️ Dependencies
+Python 3.6+
+click for command-line interaction
+tqdm for progress bars
+concurrent.futures for multi-threaded processing
+beaupy for interactive file selection
+🚀 Installation
+Clone the repository and install dependencies using Poetry:
 
-1. **Automatic Duplicate Removal**:
-    ```bash
-    python twinTrim.py /path/to/directory --all
-    ```
-
-2. **Manual Review and Removal**:
-    ```bash
-    python twinTrim.py /path/to/directory
-    ```
-
-3. **Filtered Scan by File Size and Type**:
-    ```bash
-    python twinTrim.py /path/to/directory --min-size "50kb" --max-size "500mb" --file-type "txt"
-    ```
-
-## Dependencies
-
-- Python 3.6+
-- `click` for command-line interaction
-- `tqdm` for progress bars
-- `concurrent.futures` for multi-threaded processing
-- `beaupy` for interactive selection
-
-## Installation
-
-Clone the repository and install the required dependencies using Poetry:
-
-```bash
+bash
+Copy code
 git clone https://github.com/Kota-Karthik/twinTrim.git
 cd twinTrim
 poetry install
-```
+Don’t have Poetry? Install it by following instructions on the Poetry website.
 
-If you haven't installed Poetry yet, you can do so by following the instructions on the [Poetry website](https://python-poetry.org/docs/#installation).
+🤝 Contributing
+We welcome contributions! If you have ideas to enhance TwinTrim, such as optimizing performance or improving the user experience, feel free to contribute. Simply fork the repository and submit a pull request!
 
-## Contributing
+For detailed guidelines, see CONTRIBUTION.md.
 
-Contributions are welcome! Whether you have ideas for improving the internal workings of TwinTrim, such as optimizing performance or refining algorithms, or you want to enhance the user interface of the CLI tool for a better user experience, your input is valuable. Please fork the repository and submit a pull request with your improvements or new features.
+💬 Code of Conduct
+We strive to foster a positive, welcoming, and inclusive environment. Please read our Code of Conduct to understand our community guidelines. By contributing to TwinTrim, you agree to abide by these standards.
 
-Please refer to the [CONTRIBUTION.md](./CONTRIBUTION.md) for guidelines on how to contribute.
+📜 License
+This project is licensed under the MIT License. See the LICENSE file for details.
 
-## Code of Conduct
-
-We value and prioritize creating a positive, welcoming, and inclusive environment for everyone involved in the **TwinTrim** project. We encourage all participants to be respectful, collaborative, and supportive of each other.
-
-Please take a moment to review our [Code of Conduct](./CODE_OF_CONDUCT.md) to understand the expected behavior when contributing to the project.
-
-By participating in **TwinTrim**, you agree to abide by these guidelines and help us maintain a healthy, harassment-free community.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-
+This version uses emojis, formatting, and a friendlier tone to make the project more engaging while maintaining clarity and professionalism!
