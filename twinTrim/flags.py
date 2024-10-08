@@ -28,6 +28,8 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
         file_filter.addFileExclude(file_name)
 
     if all:
+        logging.info("Deleting all duplicate files whithout asking.")
+
         handleAllFlag(directory, file_filter, label_color, bar_color)
         return
 
@@ -70,5 +72,18 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
         for file_path in files_to_delete:
             handle_and_remove(file_path)
 
-    click.echo(click.style("Selected duplicate files removed!", fg='green'))
-    click.echo(click.style(f"Time taken: {time_taken:.2f} seconds.", bg='green'))
+        click.echo(click.style("Selected duplicate files removed!", fg='green'))
+        click.echo(click.style(f"Time taken: {time_taken:.2f} seconds.", bg='green'))
+        try:
+            handle_and_remove(file_path)
+            logging.info(f"Deleted duplicate file: {file_path}")
+        except Exception as e:
+            logging.error(f"Error deleting file {file_path}: {str(e)}")
+            click.echo(click.style(f"Error deleting file: {file_path}. Check the log for details.", fg='red'))
+
+
+    end_time = time.time()
+    time_taken = end_time - start_time
+    click.echo(click.style(f"Time taken: {time_taken:.2f} seconds.", fg='green'))
+    logging.info(f"Total time taken: {time_taken:.2f} seconds.")
+
