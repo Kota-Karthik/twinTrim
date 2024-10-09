@@ -27,8 +27,8 @@ def test_add_or_update_file_exists():
         assert isinstance(result, FileMetadata)
 
 def test_add_or_update_file_does_not_exist():
+    file_path = '/path/to/file'
     with patch('os.path.exists', return_value=False):  
-        file_path = '/path/to/file'
         with patch('builtins.open', mock_open()):  
             result = add_or_update_normal_file(file_path)
             assert result is None
