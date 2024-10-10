@@ -45,9 +45,8 @@ TwinTrim is a powerful and efficient tool designed to find and manage duplicate 
 ### Command Line Interface
 
 Run the script using the following command:
-
 ```bash
-python twinTrim.py <directory> [OPTIONS]
+python -m twinTrim.main <directory> [OPTIONS]
 ```
 
 ### Options
@@ -64,17 +63,17 @@ python twinTrim.py <directory> [OPTIONS]
 
 1. **Automatic Duplicate Removal**:
     ```bash
-    python twinTrim.py /path/to/directory --all
+    python -m twinTrim.main /path/to/directory --all
     ```
 
 2. **Manual Review and Removal**:
     ```bash
-    python twinTrim.py /path/to/directory
+    python -m twinTrim.main /path/to/directory
     ```
 
 3. **Filtered Scan by File Size and Type**:
     ```bash
-    python twinTrim.py /path/to/directory --min-size "50kb" --max-size "500mb" --file-type "txt"
+    python -m twinTrim.main /path/to/directory --min-size "50kb" --max-size "500mb" --file-type "txt"
     ```
 
 ## Dependencies
@@ -93,6 +92,7 @@ Clone the repository and install the required dependencies using Poetry:
 git clone https://github.com/Kota-Karthik/twinTrim.git
 cd twinTrim
 poetry install
+poetry shell
 ```
 
 If you haven't installed Poetry yet, you can do so by following the instructions on the [Poetry website](https://python-poetry.org/docs/#installation).
@@ -101,7 +101,7 @@ If you haven't installed Poetry yet, you can do so by following the instructions
 
 Contributions are welcome! Whether you have ideas for improving the internal workings of TwinTrim, such as optimizing performance or refining algorithms, or you want to enhance the user interface of the CLI tool for a better user experience, your input is valuable. Please fork the repository and submit a pull request with your improvements or new features.
 
-Please refer to the [CONTRIBUTION.md](./CONTRIBUTION.md) for guidelines on how to contribute.
+Please refer to the [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on how to contribute.
 
 ## Code of Conduct
 
