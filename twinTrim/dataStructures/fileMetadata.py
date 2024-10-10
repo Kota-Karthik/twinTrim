@@ -2,7 +2,9 @@ import threading
 from typing import Dict, List
 from datetime import datetime
 from twinTrim.utils import get_file_hash, handle_and_remove
-
+import pytest
+from unittest.mock import patch, mock_open
+from twinTrim.dataStructures.fileMetadata import add_or_update_normal_file
 
 class FileMetadata:
     def __init__(self, filepaths: List[str]):
@@ -16,15 +18,17 @@ class FileMetadata:
 
 normalStore: Dict[str, 'FileMetadata'] = {}
 normalStore_lock = threading.Lock()
-def add_or_update_normal_file(file_path: str):
-    """Adds a new file's metadata to the normalStore or updates it if a duplicate is found."""
+def test_add_or_update_file_exists():
+    file_path = '/path/to/file'
     file_hash = get_file_hash(file_path)
-    new_file_metadata = FileMetadata([file_path])
+    existing_file_metadata = normalStore.get(file_hash)
+    with patch('os.path.exists', return_value=True):  
+        result = add_or_update_normal_file('file_path')
+        assert isinstance(result, FileMetadata)
 
-    with normalStore_lock:
-        existing_file_metadata = normalStore.get(file_hash)
-
-        if existing_file_metadata is None:
-            normalStore[file_hash] = new_file_metadata
-        else:
-            existing_file_metadata.insert_file(file_path)
+def test_add_or_update_file_does_not_exist():
+    file_path = '/path/to/file'
+    with patch('os.path.exists', return_value=False):  
+        with patch('builtins.open', mock_open()):  
+            result = add_or_update_normal_file(file_path)
+            assert result is None
