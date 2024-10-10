@@ -6,7 +6,6 @@ import inquirer
 from collections import defaultdict
 from twinTrim.utils import handle_and_remove, parse_size
 from twinTrim.flagController import handleAllFlag, find_duplicates
-from beaupy import select_multiple
 from twinTrim.dataStructures.fileFilter import FileFilter
 
 # Setting up logging configuration
