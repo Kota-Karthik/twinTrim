@@ -79,7 +79,7 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
         [
             inquirer.Checkbox(
                 'files',
-                message="Select files to delete (Use space to select, enter to confirm, or esc to cancel.)",
+                message="Select files to delete (Use space to select, enter to confirm, or ctr + c to cancel, arrow key to navigate.)",
                 choices=file_options,
                 validate=lambda answer, current: len(answer) > 0 or "You must choose at least one file.",
             ),
