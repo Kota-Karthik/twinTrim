@@ -105,4 +105,3 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
     time_taken = end_time - start_time
     click.echo(click.style(f"Time taken: {time_taken:.2f} seconds.", fg='green'))
     logging.info(f"Total time taken: {time_taken:.2f} seconds.")
-
