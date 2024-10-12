@@ -38,7 +38,7 @@ This Code of Conduct applies to all interactions associated with the **TwinTrim*
 
 ## Reporting and Resolution
 
-If you encounter or witness any unacceptable behavior or violations of this Code of Conduct, you are encouraged to report them directly to me at [your-email@example.com]. I take all concerns seriously and will take appropriate actions to ensure that the **TwinTrim** community remains a safe and respectful place for all.
+If you encounter or witness any unacceptable behavior or violations of this Code of Conduct, you are encouraged to report them directly to me at [kotakarthik2307@gmail.com]. I take all concerns seriously and will take appropriate actions to ensure that the **TwinTrim** community remains a safe and respectful place for all.
 
 ## Acknowledgment
 
