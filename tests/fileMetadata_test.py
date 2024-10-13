@@ -6,6 +6,8 @@ from twinTrim.dataStructures.fileMetadata import (
     normalStore_lock,
 )
 
+# Title: Add Mock File Operations for `add_or_update_normal_file` Tests
+
 # Mocking the get_file_hash function to return a predictable hash
 def mock_get_file_hash(file_path):
     return f"hash_{file_path}"
