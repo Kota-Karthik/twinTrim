@@ -131,3 +131,7 @@ dmypy.json
 
 *.db-journal
 *.db
+
+/issue
+
+test.py
