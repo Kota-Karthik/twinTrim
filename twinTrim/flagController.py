@@ -50,6 +50,7 @@ def handleAllFlag(directory,file_filter,pb_color,bar_color):
 def find_duplicates(directory, file_filter, pb_color, bar_color):
     """Find duplicate files in the given directory and store them in normalStore."""
     # Collect all file paths first and apply filters
+    start_time=time.time()
     all_files = [os.path.join(root, file_name) for root, _, files in os.walk(directory) for file_name in files]
     all_files = [f for f in all_files if file_filter.filter_files(f)]  # Apply filters
 
@@ -70,6 +71,8 @@ def find_duplicates(directory, file_filter, pb_color, bar_color):
                 click.echo(click.style(f"Error processing file {futures[future]}: {str(e)}", fg='red'))
             progress_bar.update(1)
 
+    end_time=time.time()
+    click.echo(click.style(f"Time taken to find all duplicate files: {end_time-start_time:.2f} seconds.", fg='green'))
     duplicates = []
     for _, metadata in normalStore.items():
         if len(metadata.filepaths) > 1:

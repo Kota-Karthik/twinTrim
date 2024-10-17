@@ -5,6 +5,8 @@ We appreciate your interest in contributing to our project! Contributions of all
 Before contributing, please take a moment to review and follow these guidelines to ensure a smooth process for everyone.
 
 ## Table of Contents
+- [Important](#important)
+- [Know the Project](#know-the-project)
 - [How to Contribute](#how-to-contribute)
 - [Coding Standards](#coding-standards)
 - [Commit Messages](#commit-messages)
@@ -12,10 +14,27 @@ Before contributing, please take a moment to review and follow these guidelines 
 - [Pull Requests](#pull-requests)
 - [Code of Conduct](#code-of-conduct)
 
-## How to Contribute
 
-1. **Fork the repository:**
+## Important
+- Reduntant or spam issues are not accepted.
+- No documentation contributions allowed, this includes readme, contribution guidelines and code of conduct changes.
+- Follow the rules or else you will get three warnings, ignoring or passing which you will be liable to face consequences including but limited to ban from the repository and the program the project is associated with.
+- Respect everyone, especially the maintainers and fellow contributors.
+- Follow the format and do not use offensive language.
+- Understand the project, ask questions but be polite.
+- No direct Pull Requests allowed.
+- We follow Frist Come First Serve policy.
+   
+## Know the Project
+twinTrim is a python package, planned to be published soon. This package helps you weed out duplicates of files across directories using efficient test cases and modules to make the process smooth. 
+How to Contribute
+
+This section highlights two crucial parts of contribution, both the development and solution phase along with the searching-for-issues phase. Do read till the bottom of this for your own good.
+
+## How to Contribute
+1. **Fork the repository:** Since this is a python package, you will need to run this in order to understand and find bugs or think of suitable features.
    - Click the "Fork" button in the top-right corner of the repository page to create your own copy of the project.
+
    - Clone your fork locally using:
      ```bash
      git clone https://github.com/YOUR-USERNAME/PROJECT-NAME.git
@@ -87,4 +106,3 @@ This project adheres to a Contributor Covenant [Code of Conduct](link-to-code-of
 ---
 
 Thank you for contributing! We look forward to reviewing your submissions and appreciate your efforts to improve the project.
-

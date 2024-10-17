@@ -3,6 +3,22 @@
 
 TwinTrim is a powerful and efficient tool designed to find and manage duplicate files across directories. It provides a streamlined way to scan files, identify duplicates based on their content, and remove them automatically or with user guidance, helping you save storage space and keep your file system organized.
 
+## Table of Contents
+
+- [Features](#features)
+- [How It Works](#how-it-works)
+	- [Core Components](#core-components)
+	- [Key Functions](#key-functions)
+- [Usage](#usage)
+	- [Command Line Interface](#command-line-interface)
+	- [Options](#options)
+	- [Examples](#examples)
+- [Dependencies](#dependencies)
+- [Installation](#installation)
+- [Contributing](#contributing)
+- [Code of Conduct](#code-of-conduct)
+- [License](#license)
+
 ## Features
 
 - **Duplicate Detection**: Scans directories to detect duplicate files based on file content rather than just filenames.
@@ -49,9 +65,8 @@ TwinTrim is a powerful and efficient tool designed to find and manage duplicate 
 ### Command Line Interface
 
 Run the script using the following command:
-
 ```bash
-python twinTrim.py <directory> [OPTIONS]
+python -m twinTrim.main <directory> [OPTIONS]
 ```
 
 ### Options
@@ -69,17 +84,17 @@ python twinTrim.py <directory> [OPTIONS]
 
 1. **Automatic Duplicate Removal**:
     ```bash
-    python twinTrim.py /path/to/directory --all
+    python -m twinTrim.main /path/to/directory --all
     ```
 
 2. **Manual Review and Removal**:
     ```bash
-    python twinTrim.py /path/to/directory
+    python -m twinTrim.main /path/to/directory
     ```
 
 3. **Filtered Scan by File Size and Type**:
     ```bash
-    python twinTrim.py /path/to/directory --min-size "50kb" --max-size "500mb" --file-type "txt"
+    python -m twinTrim.main /path/to/directory --min-size "50kb" --max-size "500mb" --file-type "txt"
     ```
 
 4. **Dry Run Simulation**:
@@ -104,6 +119,7 @@ Clone the repository and install the required dependencies using Poetry:
 git clone https://github.com/Kota-Karthik/twinTrim.git
 cd twinTrim
 poetry install
+poetry shell
 ```
 
 If you haven't installed Poetry yet, you can do so by following the instructions on the [Poetry website](https://python-poetry.org/docs/#installation).
@@ -112,7 +128,15 @@ If you haven't installed Poetry yet, you can do so by following the instructions
 
 Contributions are welcome! Whether you have ideas for improving the internal workings of TwinTrim, such as optimizing performance or refining algorithms, or you want to enhance the user interface of the CLI tool for a better user experience, your input is valuable. Please fork the repository and submit a pull request with your improvements or new features.
 
-Please refer to the [CONTRIBUTION.md](./CONTRIBUTION.md) for guidelines on how to contribute.
+Please refer to the [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on how to contribute.
+
+## Code of Conduct
+
+We value and prioritize creating a positive, welcoming, and inclusive environment for everyone involved in the **TwinTrim** project. We encourage all participants to be respectful, collaborative, and supportive of each other.
+
+Please take a moment to review our [Code of Conduct](./CODE_OF_CONDUCT.md) to understand the expected behavior when contributing to the project.
+
+By participating in **TwinTrim**, you agree to abide by these guidelines and help us maintain a healthy, harassment-free community.
 
 ## License
 
