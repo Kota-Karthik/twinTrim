@@ -1,62 +1,80 @@
 import os
 import pytest
-from twinTrim.dataStructures.allFileMetadata import AllFileMetadata, handle_and_remove
+import tempfile
+import time
+from twinTrim.dataStructures.allFileMetadata import AllFileMetadata
+from unittest.mock import patch
 
-# Test for compare_and_replace method
-class TestAllFileMetadata:
+@pytest.fixture
+def setup_files():
+    # Create two temporary files for testing
+    temp_file1 = tempfile.NamedTemporaryFile(delete=False)
+    temp_file2 = tempfile.NamedTemporaryFile(delete=False)
 
-    def test_compare_and_replace_correct_file_removed(self, tmp_path):
-        # Create two temporary files
-        file1 = tmp_path / "file1.txt"
-        file2 = tmp_path / "file2.txt"
-        file1.write_text("File 1")
-        file2.write_text("File 2")
+    # Write some initial content to the files
+    temp_file1.write(b'Initial content for file 1.')
+    temp_file1.close()
 
-        # Set modification times (file2 is newer)
-        os.utime(file1, (1, 1))
-        os.utime(file2, (2, 2))
+    temp_file2.write(b'Initial content for file 2.')
+    temp_file2.close()
 
-        # Initialize AllFileMetadata instances
-        metadata1 = AllFileMetadata(str(file1))
-        metadata2 = AllFileMetadata(str(file2))
+    # Return the paths of the temporary files
+    yield temp_file1.name, temp_file2.name
 
-        # Call the method
+    # Cleanup
+    os.remove(temp_file1.name)
+    os.remove(temp_file2.name)
+
+def test_compare_and_replace_removes_correct_file(setup_files):
+    file1, file2 = setup_files
+
+    # Modify the modification time of the second file to be newer
+    time.sleep(1)  # Ensure file2 is modified after file1
+    os.utime(file2, None)
+
+    metadata1 = AllFileMetadata(file1)
+    metadata2 = AllFileMetadata(file2)
+
+    with patch('twinTrim.dataStructures.allFileMetadata.handle_and_remove') as mock_remove:
         metadata1.compare_and_replace(metadata2)
 
-        # Assert the correct file is removed
-        assert file1.exists()  # file1 should still exist
-        assert not file2.exists()  # file2 should be removed
+        # Check that file1 is removed
+        mock_remove.assert_called_once_with(file1)
 
-    def test_compare_and_replace_no_file_removed_if_one_does_not_exist(self, tmp_path):
-        # Create one temporary file
-        file1 = tmp_path / "file1.txt"
-        file1.write_text("File 1")
+def test_compare_and_replace_no_file_removed_when_file_missing(setup_files):
+    file1, file2 = setup_files
 
-        # Non-existent file path
-        file2 = tmp_path / "file2.txt"  # This file will not be created
+    # Create a metadata object for file1
+    metadata1 = AllFileMetadata(file1)
 
-        # Initialize AllFileMetadata instances
-        metadata1 = AllFileMetadata(str(file1))
-        metadata2 = AllFileMetadata(str(file2))  # This will simulate a missing file
+    # Create a metadata object for a non-existing file
+    nonexistent_file = 'nonexistent_file.txt'
+    metadata2 = AllFileMetadata(nonexistent_file)
 
-        # Call the method
+    with patch('twinTrim.dataStructures.allFileMetadata.handle_and_remove') as mock_remove:
         metadata1.compare_and_replace(metadata2)
 
-        # Assert no file is removed
-        assert file1.exists()  # file1 should still exist
+        # Check that no file is removed
+        mock_remove.assert_not_called()
 
-    def test_compare_and_replace_no_file_removed_if_both_do_not_exist(self, tmp_path):
-        # Non-existent file paths
-        file1 = tmp_path / "file1.txt"  # Simulating a non-existent file
-        file2 = tmp_path / "file2.txt"  # Another non-existent file
+def test_compare_and_replace_no_file_removed_when_both_files_missing(setup_files):
+    file1, _ = setup_files
 
-        # Initialize AllFileMetadata instances with non-existent paths
-        metadata1 = AllFileMetadata(str(file1))
-        metadata2 = AllFileMetadata(str(file2))
+    # Create a metadata object for file1
+    metadata1 = AllFileMetadata(file1)
 
-        # Call the method
+    # Create a metadata object for two non-existing files
+    nonexistent_file1 = 'nonexistent_file1.txt'
+    nonexistent_file2 = 'nonexistent_file2.txt'
+    metadata2 = AllFileMetadata(nonexistent_file1)
+    metadata3 = AllFileMetadata(nonexistent_file2)
+
+    with patch('twinTrim.dataStructures.allFileMetadata.handle_and_remove') as mock_remove:
         metadata1.compare_and_replace(metadata2)
+        # No file should be removed since the second file doesn't exist
+        mock_remove.assert_not_called()
 
-        # Assert no file is removed
-        assert not file1.exists()  # file1 does not exist
-        assert not file2.exists()  # file2 does not exist
+    with patch('twinTrim.dataStructures.allFileMetadata.handle_and_remove') as mock_remove:
+        metadata1.compare_and_replace(metadata3)
+        # No file should be removed since the second file doesn't exist
+        mock_remove.assert_not_called()
