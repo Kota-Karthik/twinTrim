@@ -2,7 +2,7 @@
 name = "twinTrim"
 version = "0.1.0"
 description = "A CLI tool to find and delete duplicate files in a directory."
-authors = ["Your Name <you@example.com>"]
+authors = ["Kota-Karthik <kotakarthik2307@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
