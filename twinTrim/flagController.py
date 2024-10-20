@@ -33,10 +33,6 @@ def handleAllFlag(directory,file_filter,pb_color,bar_color):
 
         # Update progress bar as files are processed
         for future in as_completed(futures):
-            try:
-                future.result()  # Ensures exception handling for each future
-            except Exception as e:
-                click.echo(click.style(f"Error processing file {futures[future]}: {str(e)}", fg='red'))
             progress_bar.update(1)
 
     click.echo(click.style("All files scanned and duplicates handled.", fg='green'))
@@ -50,7 +46,6 @@ def handleAllFlag(directory,file_filter,pb_color,bar_color):
 def find_duplicates(directory, file_filter, pb_color, bar_color):
     """Find duplicate files in the given directory and store them in normalStore."""
     # Collect all file paths first and apply filters
-    start_time=time.time()
     all_files = [os.path.join(root, file_name) for root, _, files in os.walk(directory) for file_name in files]
     all_files = [f for f in all_files if file_filter.filter_files(f)]  # Apply filters
 
@@ -65,14 +60,8 @@ def find_duplicates(directory, file_filter, pb_color, bar_color):
         futures = {executor.submit(process_file, file_path): file_path for file_path in all_files}
         
         for future in as_completed(futures):
-            try:
-                future.result()  # Ensures exception handling for each future
-            except Exception as e:
-                click.echo(click.style(f"Error processing file {futures[future]}: {str(e)}", fg='red'))
-            progress_bar.update(1)
+            progress_bar.update(1) 
 
-    end_time=time.time()
-    click.echo(click.style(f"Time taken to find all duplicate files: {end_time-start_time:.2f} seconds.", fg='green'))
     duplicates = []
     for _, metadata in normalStore.items():
         if len(metadata.filepaths) > 1:
@@ -81,3 +70,5 @@ def find_duplicates(directory, file_filter, pb_color, bar_color):
                 duplicates.append((original_path, duplicate_path))
 
     return duplicates
+
+
