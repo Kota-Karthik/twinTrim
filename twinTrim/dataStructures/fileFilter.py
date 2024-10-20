@@ -9,14 +9,7 @@ class FileFilter:
         self.fileExclude = []
 
     def setMinFileSize(self, size):
-     if isinstance(size, (int, float)) and size > 0:
         self.minFileSize = size
-     elif isinstance(size, str):
-        # Optionally add regex to validate file size strings like '10kb', '500mb'
-        self.minFileSize = size
-     else:
-        raise ValueError("Invalid size: must be a positive number or a valid size string.")
-
 
     def setMaxFileSize(self, size):
         self.maxFileSize = size
@@ -36,24 +29,4 @@ class FileFilter:
         if os.path.basename(file_path).strip() in self.fileExclude:
             return False
         return True
-    def test_setMinFileSize_valid_integer():
-     file_filter = FileFilter()
-     file_filter.setMinFileSize(1024)
-     assert file_filter.minFileSize == 1024
-
-    def test_setMinFileSize_valid_string():
-     file_filter = FileFilter()
-     file_filter.setMinFileSize("10kb")
-     assert file_filter.minFileSize == "10kb"
- 
-    def test_setMinFileSize_negative_number():
-     file_filter = FileFilter()
-     with pytest.raises(ValueError):
-      file_filter.setMinFileSize(-1024)
-
-    def test_setMinFileSize_zero():
-     file_filter = FileFilter()
-     with pytest.raises(ValueError):
-        file_filter.setMinFileSize(0)
-  
-
+    
