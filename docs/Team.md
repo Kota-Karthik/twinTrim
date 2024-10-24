@@ -14,3 +14,4 @@ Thank you once again to all our contributors! Your efforts are truly appreciated
 <div align='center'>
     <img src="https://contrib.rocks/image?repo=Kota-Karthik/twinTrim&max=100" alt="Contributors" />
 </div>
+<!-- readme: contributors -end -->
