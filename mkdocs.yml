@@ -11,3 +11,12 @@ theme:
     - navigation.instant.progress # Add this line to enable instant navigation progress
   icon:
     repo: fontawesome/brands/github
+
+nav:
+  - Home: index.md
+  - Usage: Usage.md
+  - Contributing: Contributing.md
+  - How It Works: How-It-Works.md
+  - Team: Team.md
+  - License: License.md
+
