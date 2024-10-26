@@ -2,9 +2,9 @@ import pytest
 import os
 from pathlib import Path
 from unittest.mock import patch, MagicMock, mock_open
-from ..twinTrim.flagController import handleAllFlag
-from ..twinTrim.dataStructures.fileFilter import FileFilter
-from ..twinTrim.flagController import find_duplicates
+from twinTrim.flagController import handleAllFlag
+from twinTrim.dataStructures.fileFilter import FileFilter
+from twinTrim.flagController import find_duplicates
 
 @patch('os.walk')
 @patch('twinTrim.flagController.add_or_update_file')
