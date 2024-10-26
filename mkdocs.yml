@@ -1,0 +1,23 @@
+site_name: TwinTrim Docs
+site_url: https://twintrim.com/docs
+repo_url: https://github.com/Kota-Karthik/twinTrim
+repo_name: Kota-Karthik/twinTrim
+theme:
+  name: material
+  features:
+    - navigation.tabs # Add this line to enable tabs in the navigation
+    - navigation.sections # Add this line to enable sections in the navigation
+    - navigation.instant # Add this line to enable instant navigation
+    - navigation.instant.progress # Add this line to enable instant navigation progress
+  icon:
+    repo: fontawesome/brands/github
+
+  palette:
+    scheme: slate
+    
+nav:
+  - Home: index.md
+  - Usage: Usage.md
+  - Contributing: Contributing.md
+  - How It Works: How-It-Works.md
+  - License: License.md
