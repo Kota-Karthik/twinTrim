@@ -51,7 +51,7 @@ def test_update_existing_file_metadata(temp_file):
     new_file = os.path.join(os.path.dirname(temp_file), "new_test_file.txt")
     with open(new_file, "w") as f:
         f.write("Sample content")
-    time.sleep(1)  # Ensure the new file has a different modification time
+    time.sleep(2)  # Ensure the new file has a different modification time
 
     # Act: Add the new file with the same hash
     add_or_update_file(new_file)
