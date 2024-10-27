@@ -4,7 +4,7 @@ We appreciate your interest in contributing to our project! Contributions of all
 
 Before contributing, please take a moment to review and follow these guidelines to ensure a smooth process for everyone.
 
-## Table of Contents
+## Table of Contents 
 - [Important](#important)
 - [Know the Project](#know-the-project)
 - [How to Contribute](#how-to-contribute)
