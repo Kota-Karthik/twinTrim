@@ -47,7 +47,11 @@ def test_update_existing_file_metadata(temp_file):
     add_or_update_file(temp_file)
     file_hash = get_file_hash(temp_file)
     
-    # Create a new file with the same content
+    # Verify that the initial file is added to the store
+    assert file_hash in store
+    original_file_path = store[file_hash].filepath
+
+    # Create a new file with the same content but a different modification time
     new_file = os.path.join(os.path.dirname(temp_file), "new_test_file.txt")
     with open(new_file, "w") as f:
         f.write("Sample content")
@@ -56,6 +60,11 @@ def test_update_existing_file_metadata(temp_file):
     # Act: Add the new file with the same hash
     add_or_update_file(new_file)
     
-    # Assert: Check if the store has been updated
+    # Assert: Check if the store has been updated to the latest file path
     assert file_hash in store, "File hash should be present in the store after updating"
-    assert store[file_hash].filepath == new_file, "Store should update to the latest file path"
+    assert store[file_hash].filepath == new_file, (
+        f"Expected latest file path '{new_file}', but got '{store[file_hash].filepath}'"
+    )
+    assert store[file_hash].filepath != original_file_path, (
+        "Store should replace the old file path with the latest one"
+    )
