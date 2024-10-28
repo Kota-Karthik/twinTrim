@@ -39,7 +39,7 @@ def test_update_existing_file_metadata(temp_file, tmp_path):
     
     # Wait to ensure modification time is different
     time.sleep(1)
-    os.utime(str(new_file), (new_file.stat().st_atime, time.time()))
+    os.utime(new_file, (new_file.stat().st_atime, time.time()))
 
     # Act: Update the store with the new file having the same hash
     add_or_update_file(str(new_file))
