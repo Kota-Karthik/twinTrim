@@ -41,4 +41,15 @@ def test_set_max_file_size_empty_value():
     file_filter.setMaxFileSize("")
     assert file_filter.maxFileSize == "", "Failed to set max file size to empty value"
 
+def test_add_file_exclude_adds_file():
+    file_filter = FileFilter()
+    file_filter.addFileExclude("test_file.txt")
+    assert "test_file.txt" in file_filter.fileExclude
+
+def test_add_file_exclude_prevents_duplicates():
+    file_filter = FileFilter()
+    file_filter.addFileExclude("test_file.txt")
+    file_filter.addFileExclude("test_file.txt")
+    assert file_filter.fileExclude.count("test_file.txt") == 2
+
 
