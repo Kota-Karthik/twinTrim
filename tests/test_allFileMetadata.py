@@ -1,51 +1,42 @@
 import os
-import time
 import pytest
-from twinTrim.dataStructures.allFileMetadata import add_or_update_file, store
-from twinTrim.utils import get_file_hash
+from twinTrim.dataStructures.allFileMetadata import AllFileMetadata
+from pathlib import Path
 
 @pytest.fixture
 def temp_file(tmp_path):
-    """Fixture to create a temporary file for testing."""
-    temp_file_path = tmp_path / "test_file.txt"
-    with open(temp_file_path, "w") as f:
-        f.write("Sample content")
-    return str(temp_file_path)
+    """Creates a temporary file for testing and returns its Path object."""
+    file = tmp_path / "test_file.txt"
+    file.write_text("Sample content")
+    return file  # Return Path object instead of str
 
-def test_add_new_file_metadata(temp_file):
-    # Arrange: Clear the store and add a new file
-    store.clear()
-    add_or_update_file(temp_file)
-    file_hash = get_file_hash(temp_file)
+def test_get_modification_time_existing_file(temp_file):
+    """
+    Test that the modification time is correctly retrieved for an existing file.
+    """
+    # Arrange
+    metadata = AllFileMetadata(temp_file)
 
-    # Assert: Check if the file was added to the store
-    assert file_hash in store, "File hash should be in the store after adding"
-    assert store[file_hash].filepath == temp_file, "Stored file path should match the added file"
+    # Act
+    modification_time = metadata.get_modification_time()
 
-def test_update_existing_file_metadata(temp_file, tmp_path):
-    # Arrange: Clear the store, add the initial file
-    store.clear()
-    add_or_update_file(temp_file)
-    file_hash = get_file_hash(temp_file)
+    # Assert
+    assert modification_time > 0, (
+        "Expected a positive modification time for an existing file, but got None or 0"
+    )
 
-    # Verify the initial file is added
-    assert file_hash in store
-    original_file_path = store[file_hash].filepath
+def test_get_modification_time_non_existing_file():
+    """
+    Test that the modification time retrieval returns -1 or appropriate error for non-existing file.
+    """
+    # Arrange
+    non_existing_filepath = Path("non/existing/path/file.txt")
+    metadata = AllFileMetadata(non_existing_filepath)
 
-    # Create a new file with the same content but a different modification time
-    new_file = tmp_path / "new_test_file.txt"
-    with open(new_file, "w") as f:
-        f.write("Sample content")
-    
-    # Wait to ensure modification time is different
-    time.sleep(1)
-    os.utime(new_file, (new_file.stat().st_atime, time.time()))
+    # Act
+    modification_time = metadata.get_modification_time()
 
-    # Act: Update the store with the new file having the same hash
-    add_or_update_file(str(new_file))
-
-    # Assert: Verify the store is updated with the latest file path
-    assert file_hash in store, "File hash should still be in the store after updating"
-    assert store[file_hash].filepath == str(new_file), (
-        f"Expected latest file path '{new_file}', but got '{store[file_hash].filepath}'"
+    # Assert
+    assert modification_time == -1, (
+        "Expected -1 for modification time of non-existing file, but got a different value"
     )
