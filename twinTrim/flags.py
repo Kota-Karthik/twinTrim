@@ -30,7 +30,8 @@ ERROR_COLOR = 'red'
 @click.option("--exclude", multiple=True, help="Files to exclude by name.")
 @click.option("--label-color", default="yellow", type=str, help="Color of the label of progress bar.")
 @click.option("--bar-color", default='#aaaaaa', type=str, help="Color of the progress bar.")
-def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar_color):
+@click.option("--dry-run", is_flag=True, help="Simulate the deletion without actually removing any files.")
+def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar_color, dry_run):
     """Find and manage duplicate files in the specified DIRECTORY."""
 
     # Initialize the FileFilter object
@@ -43,7 +44,7 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
 
     if all:
         logging.info("Deleting all duplicate files without asking.")
-        handleAllFlag(directory, file_filter, label_color, bar_color)
+        handleAllFlag(directory, file_filter, label_color, bar_color, dry_run)
         return
 
     start_time = time.time()
@@ -57,12 +58,12 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
         return
 
     if not duplicates:
-        click.echo(click.style("No duplicate files found.", fg=SUCCESS_COLOR))
+        click.echo(click.style("No duplicate files found.", fg='green'))
         logging.info("No duplicate files found.")
         return
 
     click.echo(click.style(f"Found {len(duplicates)} sets of duplicate files:", fg=WARNING_COLOR))
-    logging.info(f"Found {len(duplicates)} sets of duplicate files")
+    logging.info(f"Found {len(duplicates)} set of duplicate files")
 
     duplicates_dict = defaultdict(list)
     for original, duplicate in duplicates:
@@ -73,6 +74,7 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
         click.echo(click.style(f"Original file: \"{original}\"", fg=INFO_COLOR))
         click.echo(click.style(f"Number of duplicate files found: {len(duplicates_list)}", fg=INFO_COLOR))
         logging.info(f"Original file: \"{original}\" with {len(duplicates_list)} duplicates")
+
         click.echo(click.style("They are:", fg=INFO_COLOR))
 
         # Create file options with additional information
@@ -80,30 +82,39 @@ def cli(directory, all, min_size, max_size, file_type, exclude, label_color, bar
             f"{idx + 1}) {duplicate} (Size: {os.path.getsize(duplicate)} bytes)" for idx, duplicate in enumerate(duplicates_list)
         ]
 
-        answers = inquirer.prompt(
-            [
-                inquirer.Checkbox(
-                    'files',
-                    message="Select files to delete (Use space to select, enter to confirm, or ctr + c to cancel, arrow key to navigate.)",
-                    choices=file_options,
-                    validate=lambda answer, current: len(answer) > 0 or "You must choose at least one file.",
-                ),
-                inquirer.Confirm(
-                    'confirm',
-                    message="Are you sure you want to delete the selected files?",
-                    default=True
-                )
-            ]
-        )
-
-        if answers and answers['confirm']:
-            selected_files = answers['files']
-            # Convert the selected options back to the original file paths
-            files_to_delete = [duplicates_list[int(option.split(")")[0]) - 1] for option in selected_files]
-            for file_path in files_to_delete:
-                handle_and_remove(file_path)
+        if dry_run:
+            # Log and display which files would be deleted in dry-run mode
+            click.echo(click.style("Dry Run Mode: These files would be deleted:", fg='yellow'))
+            for option in file_options:
+                click.echo(click.style(option, fg='red'))
+            logging.info(f"[Dry Run] Would delete files: {file_options}")
         else:
-            click.echo(click.style("File deletion canceled.", fg=WARNING_COLOR))
+            # If not dry run, prompt for deletion
+            answers = inquirer.prompt(
+                [
+                    inquirer.Checkbox(
+                        'files',
+                        message="Select files to delete (Use space to select, enter to confirm, or ctrl+c to cancel, arrow key to navigate.)",
+                        choices=file_options,
+                        validate=lambda answer, current: len(answer) > 0 or "You must choose at least one file.",
+                    ),
+                    inquirer.Confirm(
+                        'confirm',
+                        message="Are you sure you want to delete the selected files?",
+                        default=True
+                    )
+                ]
+            )
+
+            if answers and answers['confirm']:
+                selected_files = answers['files']
+                # Convert the selected options back to the original file paths
+                files_to_delete = [duplicates_list[int(option.split(")")[0]) - 1] for option in selected_files]
+
+                for file_path in files_to_delete:
+                    handle_and_remove(file_path)
+            else:
+                click.echo(click.style("File deletion canceled.", fg=WARNING_COLOR))
 
     end_time = time.time()
     time_taken = end_time - start_time
