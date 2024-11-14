@@ -9,6 +9,8 @@ license = "MIT"
 python = "^3.8"
 click = "^8.0"  # For creating CLI commands
 tqdm = "^4.66.5"
+mkdocs = "^1.6.1"
+mkdocs-material = "^9.5.44"
 
 [tool.poetry.group.dev.dependencies]
 pytest-mock = "^3.14.0"
