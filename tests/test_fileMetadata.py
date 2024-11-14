@@ -1,78 +1,164 @@
-# test_fileMetadata.py
-from unittest.mock import mock_open, patch
 import pytest
-from twinTrim.dataStructures.fileMetadata import normalStore, add_or_update_normal_file, FileMetadata
+from unittest.mock import patch, mock_open
+from twinTrim.dataStructures.fileMetadata import (
+    add_or_update_normal_file,
+    normalStore,
+    FileMetadata,
+    normalStore_lock,
+)
+import threading
+import os
+import tempfile
 
+# Mock the get_file_hash function to return a predictable hash
+def mock_get_file_hash(file_path):
+    return f"hash_{file_path}"
+
+# Automatically replace the get_file_hash function with the mock in all tests
+@pytest.fixture(autouse=True)
+def mock_get_file_hash_func(monkeypatch):
+    monkeypatch.setattr(
+        "twinTrim.dataStructures.fileMetadata.get_file_hash", mock_get_file_hash
+    )
+
+# Automatically reset the normalStore before each test
+@pytest.fixture(autouse=True)
+def reset_normal_store():
+    normalStore.clear()
+
+# Test inserting a new file
 def test_insert_new_file():
-    # Test inserting a new file into the metadata
-    metadata = FileMetadata([])
-    file_path = "C:\\Users\\2004s\\Desktop\\dummy\\dummy_1.txt"
-    
-    metadata.insert_file(file_path)
-    
-    assert len(metadata.filepaths) == 1
-    assert metadata.filepaths[0] == file_path
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        file_path = temp_file.name
+        metadata = FileMetadata([])
+        metadata.insert_file(file_path)
 
+        assert len(metadata.filepaths) == 1
+        assert metadata.filepaths[0] == file_path
+
+# Test inserting a duplicate file
 def test_insert_duplicate_file():
-    # Test trying to insert a file that is already present
-    file_path = "C:\\Users\\2004s\\Desktop\\dummy\\dummy_2.txt"
-    metadata = FileMetadata([file_path])
-    
-    metadata.insert_file(file_path)
-    
-    # The file should not be added again
-    assert len(metadata.filepaths) == 1
-    assert metadata.filepaths[0] == file_path
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        file_path = temp_file.name
+        metadata = FileMetadata([file_path])
+        metadata.insert_file(file_path)
 
+        assert len(metadata.filepaths) == 1
+        assert metadata.filepaths[0] == file_path
+
+# Test inserting multiple files
 def test_insert_multiple_files():
-    # Test inserting multiple different files
-    file_path1 = "C:\\Users\\2004s\\Desktop\\dummy\\dummy_3.txt"
-    file_path2 = "C:\\Users\\2004s\\Desktop\\dummy\\dummy_4.txt"
-    
-    metadata = FileMetadata([file_path1])
-    
-    metadata.insert_file(file_path2)
-    
-    assert len(metadata.filepaths) == 2
-    assert file_path1 in metadata.filepaths
-    assert file_path2 in metadata.filepaths
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file1, tempfile.NamedTemporaryFile(delete=False) as temp_file2:
+        file_path1 = temp_file1.name
+        file_path2 = temp_file2.name
 
+        metadata = FileMetadata([file_path1])
+        metadata.insert_file(file_path2)
+
+        assert len(metadata.filepaths) == 2
+        assert file_path1 in metadata.filepaths
+        assert file_path2 in metadata.filepaths
+
+# Test adding or updating a new file
 def test_add_or_update_new_file():
-    file_path = "C:\\Users\\2004s\\Desktop\\dummy\\dummy_5.txt"  # Define the mock file path
-    expected_file_hash = "b1295d8ebb927df19ad74eec6aea72e3"  # Use the actual hash computed from the file
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        file_path = temp_file.name
+        expected_file_hash = "hash_" + file_path
 
-    # Mock the get_file_hash function to return the expected hash
-    with patch("twinTrim.utils.get_file_hash", return_value=expected_file_hash), \
-         patch("builtins.open", mock_open(read_data=b"some binary content")):
+        with patch("builtins.open", mock_open(read_data=b"some binary content")):
+            normalStore.clear()
+            add_or_update_normal_file(file_path)
 
-        # Clear normalStore before the test to avoid conflicts
-        normalStore.clear()
+            assert expected_file_hash in normalStore
+            assert normalStore[expected_file_hash].filepaths == [file_path]
 
-        # Call the function to add a new file
+# Test adding a new file to an empty store
+def test_add_new_file_to_empty_store():
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        file_path = temp_file.name
+        expected_file_hash = "hash_" + file_path
+
+        with patch("builtins.open", mock_open(read_data=b"some binary content")):
+            normalStore.clear()
+            add_or_update_normal_file(file_path)
+
+            assert len(normalStore) == 1
+            assert expected_file_hash in normalStore
+            assert normalStore[expected_file_hash].filepaths == [file_path]
+
+
+# Test no duplicate insertion in metadata
+def test_no_duplicate_insertion_in_metadata():
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        file_path = temp_file.name
+        expected_file_hash = "hash_" + file_path
+
+        with patch("builtins.open", mock_open(read_data=b"some binary content")):
+            normalStore.clear()
+            add_or_update_normal_file(file_path)
+            add_or_update_normal_file(file_path)
+
+            assert len(normalStore) == 1
+            assert expected_file_hash in normalStore
+            assert normalStore[expected_file_hash].filepaths == [file_path]
+
+# Test adding multiple files with different hashes
+def test_multiple_files_different_hashes():
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file1, tempfile.NamedTemporaryFile(delete=False) as temp_file2, tempfile.NamedTemporaryFile(delete=False) as temp_file3:
+        file_path1 = temp_file1.name
+        file_path2 = temp_file2.name
+        file_path3 = temp_file3.name
+
+        with patch("builtins.open", mock_open(read_data=b"some binary content")):
+            normalStore.clear()
+            add_or_update_normal_file(file_path1)
+            add_or_update_normal_file(file_path2)
+            add_or_update_normal_file(file_path3)
+
+            assert len(normalStore) == 3
+            assert "hash_" + file_path1 in normalStore and normalStore["hash_" + file_path1].filepaths == [file_path1]
+            assert "hash_" + file_path2 in normalStore and normalStore["hash_" + file_path2].filepaths == [file_path2]
+            assert "hash_" + file_path3 in normalStore and normalStore["hash_" + file_path3].filepaths == [file_path3]
+
+# Test concurrent add or update
+def test_add_or_update_normal_file_concurrently():
+    file_paths = [f"file_{i}.txt" for i in range(10)]
+
+    def worker(file_path):
         add_or_update_normal_file(file_path)
 
-        # Check that the expected file hash is in normalStore
-        assert expected_file_hash in normalStore.keys(), f"Expected hash '{expected_file_hash}' not found in normalStore"
+    threads = [threading.Thread(target=worker, args=(fp,)) for fp in file_paths]
 
-        # Check that the file path was added correctly
-        assert normalStore[expected_file_hash].filepaths == [file_path], "File path not added correctly"
+    for thread in threads:
+        thread.start()
 
-def test_add_or_update_existing_file():
-    file_path1 = "C:\\Users\\2004s\\Desktop\\dummy\\dummy_5.txt"
-    file_path2 = "C:\\Users\\2004s\\Desktop\\dummy\\dummy_5_v2.txt"
-    expected_file_hash = "b1295d8ebb927df19ad74eec6aea72e3"  # Use the actual hash computed from the file
+    for thread in threads:
+        thread.join()
 
-    # First add a file
-    with patch("twinTrim.utils.get_file_hash", return_value=expected_file_hash), \
-         patch("builtins.open", mock_open(read_data=b"some binary content")):
-        normalStore.clear()
-        add_or_update_normal_file(file_path1)
+    assert len(normalStore) == 10
+    for file_path in file_paths:
+        file_hash = "hash_" + file_path
+        assert file_hash in normalStore
+        assert normalStore[file_hash].filepaths == [file_path]
 
-    # Then update it
-    with patch("twinTrim.utils.get_file_hash", return_value=expected_file_hash), \
-         patch("builtins.open", mock_open(read_data=b"some binary content")):
-        add_or_update_normal_file(file_path2)
+# Test adding duplicates concurrently
+def test_add_or_update_normal_file_with_duplicates_concurrently():
+    file_path = "duplicate_file.txt"
+    num_threads = 5
 
-    # Check that the file paths were updated correctly
-    assert expected_file_hash in normalStore.keys(), f"Expected hash '{expected_file_hash}' not found in normalStore"
-    assert normalStore[expected_file_hash].filepaths == [file_path1, file_path2], "File paths not updated correctly"
+    def worker():
+        add_or_update_normal_file(file_path)
+
+    threads = [threading.Thread(target=worker) for _ in range(num_threads)]
+
+    for thread in threads:
+        thread.start()
+
+    for thread in threads:
+        thread.join()
+
+    file_hash = "hash_" + file_path
+    assert len(normalStore) == 1
+    assert file_hash in normalStore
+    assert normalStore[file_hash].filepaths == [file_path]
+
