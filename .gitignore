@@ -7,7 +7,6 @@ __pycache__/
 *.so
 
 # Virtual environment
-.env/
 .venv/
 env/
 venv/
@@ -16,8 +15,6 @@ env.bak/
 venv.bak/
 
 # Poetry virtual environment
-# The virtual environment created by Poetry will be ignored
-# .cache is where Poetry stores the virtual environment by default
 .cache/
 .pdm.toml
 
@@ -38,8 +35,6 @@ var/
 *.whl
 
 # PyInstaller
-# Usually these files are written by a Python script from a template
-# before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
 
@@ -87,11 +82,9 @@ profile_default/
 ipython_config.py
 
 # pyenv
-# Ignore Python runtime files
 .python-version
 
 # pipenv
-# Ignore pipenv-specific files
 Pipfile
 Pipfile.lock
 
@@ -129,9 +122,32 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
+# Miscellaneous
 *.db-journal
 *.db
 
+# Issue tracker files
 /issue
 
+# Python test coverage cache
+/.pytest_cache/
+
+# Build files
+build/
+dist/
+*.whl
+*.tar.gz
+
+# TwinTrim build artifacts
+build/
+dist/
+*.egg-info/
+
+# VSCode settings
+.vscode/
+
+# Test files
 test.py
+
+# Ignore the search index
+search/search_index.json
