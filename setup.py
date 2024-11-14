@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='twinTrim',  # Name of the package
-    version='0.1.0',  # Version number
+    version='0.1.1',  # Version number
     description='A CLI tool to find and delete duplicate files in a directory.',  # Short description
     long_description=open('README.md').read(),  # Readme for long description
     long_description_content_type='text/markdown',  # Type of long description

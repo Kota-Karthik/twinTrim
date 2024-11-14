@@ -1,16 +1,18 @@
 [tool.poetry]
 name = "twinTrim"
-version = "0.1.0"
+version = "0.1.1"
 description = "A CLI tool to find and delete duplicate files in a directory."
 authors = ["Kota-Karthik <kotakarthik2307@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.8.1"
 click = "^8.0"  # For creating CLI commands
 tqdm = "^4.66.5"
 mkdocs = "^1.6.1"
 mkdocs-material = "^9.5.44"
+inquirer = "^3.4.0"
+
 
 [tool.poetry.group.dev.dependencies]
 pytest-mock = "^3.14.0"
