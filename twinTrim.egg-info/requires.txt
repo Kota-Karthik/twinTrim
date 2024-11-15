@@ -1,9 +1,0 @@
-click>=8.0
-tqdm>=4.66.5
-mkdocs>=1.6.1
-mkdocs-material>=9.5.44
-inquirer>=3.4.0
-
-[dev]
-pytest>=8.3.3
-pytest-mock>=3.14.0
