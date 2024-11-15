@@ -1,0 +1,2 @@
+[console_scripts]
+twinTrim = twinTrim.main:cli
