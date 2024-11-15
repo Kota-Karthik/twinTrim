@@ -44,6 +44,18 @@ python -m twinTrim.main <directory> [OPTIONS]
 
 ## Installation
 
+### From PyPI
+
+Install the latest release from PyPI using pip:
+
+```bash
+pip install twinTrim
+```
+
+You can find the project on [PyPI](https://pypi.org/project/twinTrim/).
+
+### Setup for Development
+
 Clone the repository and install the required dependencies using Poetry:
 
 ```bash

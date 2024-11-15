@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "twinTrim"
-version = "0.1.1"
+version = "0.1.2"
 description = "A CLI tool to find and delete duplicate files in a directory."
 authors = ["Kota-Karthik <kotakarthik2307@gmail.com>"]
 license = "MIT"

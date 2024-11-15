@@ -1,4 +1,3 @@
-
 # TwinTrim
 
 TwinTrim is a powerful and efficient tool designed to find and manage duplicate files across directories. It provides a streamlined way to scan files, identify duplicates based on their content, and remove them automatically or with user guidance, helping you save storage space and keep your file system organized.
@@ -15,6 +14,8 @@ TwinTrim is a powerful and efficient tool designed to find and manage duplicate 
 	- [Examples](#examples)
 - [Dependencies](#dependencies)
 - [Installation](#installation)
+  - [From PyPI](#from-pypi)
+  - [Setup for Development](#setup-for-development)
 - [Contributing](#contributing)
 - [Code of Conduct](#code-of-conduct)
 - [License](#license)
@@ -102,6 +103,18 @@ python -m twinTrim.main <directory> [OPTIONS]
 
 ## Installation
 
+### From PyPI
+
+Install the latest release from PyPI using pip:
+
+```bash
+pip install twinTrim
+```
+
+You can find the project on [PyPI](https://pypi.org/project/twinTrim/).
+
+### Setup for Development
+
 Clone the repository and install the required dependencies using Poetry:
 
 ```bash
@@ -117,7 +130,7 @@ If you haven't installed Poetry yet, you can do so by following the instructions
 
 Contributions are welcome! Whether you have ideas for improving the internal workings of TwinTrim, such as optimizing performance or refining algorithms, or you want to enhance the user interface of the CLI tool for a better user experience, your input is valuable. Please fork the repository and submit a pull request with your improvements or new features.
 
-Please refer to the [CONTRIBUTION_GUIEDLINES.md](./CONTRIBUTION_GUIDELINES.md) for guidelines on how to contribute.
+Please refer to the [CONTRIBUTION_GUIDELINES.md](./CONTRIBUTION_GUIDELINES.md) for guidelines on how to contribute.
 
 ## Code of Conduct
 
@@ -130,5 +143,3 @@ By participating in **TwinTrim**, you agree to abide by these guidelines and hel
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-
