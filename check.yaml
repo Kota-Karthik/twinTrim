@@ -1,0 +1,38 @@
+apiVersion: harness.io/v1
+kind: Workflow
+type: service
+identifier: abc
+name: abc12
+owner: user:account/nisarg.agrawal@harness.io
+orgIdentifier: nisarg
+projectIdentifier: second
+spec:
+  output:
+    links:
+    - title: Pipeline Details
+      url: ${{ steps.trigger.output.PipelineUrl }}
+  lifecycle: test
+  parameters:
+  - title: Service Details
+    required:
+    - service_name
+    properties:
+      token:
+        title: Harness Token
+        type: string
+        ui:widget: password
+        ui:field: HarnessAuthToken
+      service_name:
+        title: Service Name
+        type: string
+        description: Mention the project name
+  steps:
+  - id: trigger
+    name: Creating your appication
+    action: trigger:harness-custom-pipeline
+    input:
+      url:
+      - Harness Pipeline URL
+      inputset:
+        service_name: ${{ parameters.service_name }}
+      apikey: ${{ parameters.token }}
