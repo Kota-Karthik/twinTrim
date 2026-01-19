@@ -6,3 +6,10 @@ name: final_test_consumesApisGit
 owner: user:account/kota.karthik@harness.io
 spec:
   lifecycle: test
+  sourceCode:
+    provider: Github
+    repoName: twinTrim
+    connectorRef: account.karthik_connector
+    branch: main
+    monoRepo: false
+    url: https://github.com/Kota-Karthik/twinTrim/tree/main
