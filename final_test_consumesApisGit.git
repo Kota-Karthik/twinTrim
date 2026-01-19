@@ -1,0 +1,8 @@
+apiVersion: harness.io/v1
+kind: Component
+type: service
+identifier: final_test_consumesApisGit
+name: final_test_consumesApisGit
+owner: user:account/kota.karthik@harness.io
+spec:
+  lifecycle: test
