@@ -5,7 +5,7 @@ identifier: final_test_consumesApisGit
 name: final_test_consumesApisGit
 owner: user:account/kota.karthik@harness.io
 spec:
-  lifecycle: test
+  lifecycle: experimental
   sourceCode:
     provider: Github
     repoName: twinTrim
